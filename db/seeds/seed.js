@@ -1,11 +1,15 @@
-const db = require('./connection');
+const db = require('../connection');
 const format = require('pg-format');
+const { putDataInArray } = require('./utils');
 
-function seed() {
+function seed({userData}) {
     return db
         .query("DROP TABLE IF EXISTS users;")
         .then(() => {
             return createUsers();
+        })
+        .then(() => {
+            return insertUsersData(userData);
         })
 }
 
@@ -14,16 +18,27 @@ function createUsers() {
         user_id SERIAL PRIMARY KEY,
         username VARCHAR NOT NULL,
         email VARCHAR NOT NULL,
-        age INT NOT NULL,
+        age VARCHAR NOT NULL,
         bio VARCHAR,
         region VARCHAR NOT NULL,
         city VARCHAR NOT NULL,
         type_of_biking VARCHAR NOT NULL,
         difficulty VARCHAR NOT NULL,
-        distance INT,
+        distance VARCHAR,
         rating INT,
         avatar_url VARCHAR NOT NULL);`
     )
+}
+
+function insertUsersData(usersToInsert) {
+    const userInsertStr = format(
+        `INSERT INTO users
+        (username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, avatar_url)
+        VALUES %L
+        RETURNING *;`,
+        putDataInArray(usersToInsert)
+    )
+    return db.query(userInsertStr)
 }
 
 module.exports = seed;
