@@ -18,13 +18,13 @@ function createUsers() {
         user_id SERIAL PRIMARY KEY,
         username VARCHAR NOT NULL,
         email VARCHAR NOT NULL,
-        age INT NOT NULL,
+        age VARCHAR NOT NULL,
         bio VARCHAR,
         region VARCHAR NOT NULL,
         city VARCHAR NOT NULL,
         type_of_biking VARCHAR NOT NULL,
         difficulty VARCHAR NOT NULL,
-        distance INT,
+        distance VARCHAR,
         rating INT,
         avatar_url VARCHAR NOT NULL);`
     )
