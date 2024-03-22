@@ -1,7 +1,6 @@
 module.exports = [
     {
-        user_id: 1,
-        name: "John Doe",
+        username: "jonnyDough92",
         email: "yampreek@gmail.com",
         age: 30,
         bio: "Passionate cyclist who loves exploring new trails.",
@@ -14,8 +13,7 @@ module.exports = [
         avatar_url: "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
-        user_id: 2,
-        name: "Alice Smith",
+        username: "asmith96",
         email: "alice.smith@example.com",
         age: 27,
         bio: "Cycling enthusiast with a love for long rides.",
@@ -28,8 +26,7 @@ module.exports = [
         avatar_url: "https://images.unsplash.com/photo-1598550880863-4e8aa3d0edb4?q=80&w=1527&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
-        user_id: 3,
-        name: "Emily Johnson",
+        username: "wilko987123",
         email: "emily.johnson@example.com",
         age: 28,
         bio: "Casual cyclist who enjoys leisurely rides on weekends.",
@@ -42,8 +39,7 @@ module.exports = [
         avatar_url: "https://images.unsplash.com/photo-1606914707708-5180546f153d?q=80&w=1376&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
-        user_id: 4,
-        name: "Michael Brown",
+        username: "mbrown88",
         email: "michael.brown@example.com",
         age: 35,
         bio: "Dedicated mountain biker seeking thrilling adventures.",
@@ -56,8 +52,7 @@ module.exports = [
         avatar_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
-        user_id: 5,
-        name: "Sophia Lee",
+        username: "sophielee33",
         email: "sophia.lee@example.com",
         age: 27,
         bio: "Road cycling enthusiast training for competitions.",
@@ -70,8 +65,7 @@ module.exports = [
         avatar_url: "https://images.unsplash.com/photo-1625897428517-7e2062829a26?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
-        user_id: 6,
-        name: "Daniel Garcia",
+        username: "dannyg420",
         email: "daniel.garcia@example.com",
         age: 32,
         bio: "Relaxed cyclist who enjoys scenic routes in parks.",
