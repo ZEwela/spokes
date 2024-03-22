@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS spokes_test;
+CREATE DATABASE spokes_test;
