@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watch",
+    "test": "PGDATABASE=spokes_test jest --watch",
     "setup-db": "psql -f ./db/setup.sql",
     "seed": "PGDATABASE=spokes_test node db/run-seed.js"
   },
@@ -13,11 +13,13 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
-    "express": "^4.19.1"
+    "express": "^4.19.1",
+    "pg": "^8.11.3",
+    "postgres": "^3.4.4"
   },
   "devDependencies": {
-    "pg-format": "^1.0.4",
     "jest": "^29.7.0",
+    "pg-format": "^1.0.4",
     "supertest": "^6.3.4"
   }
 }
