@@ -1,1 +1,1 @@
-//exports here
+exports.userData = require('./users')
