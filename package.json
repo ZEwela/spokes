@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "PGDATABASE=spokes_test jest --watch",
+    "test": "PGDATABASE=spokes_test jest",
     "setup-db": "psql -f ./db/setup.sql",
-    "seed": "PGDATABASE=spokes_test node db/run-seed.js"
+    "seed": "PGDATABASE=spokes_test node db/seeds/run-seed.js"
   },
   "keywords": [],
   "author": "",
