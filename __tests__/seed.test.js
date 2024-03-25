@@ -1,227 +1,101 @@
-const db = require("../db/connection");
-const seed = require("../db/seeds/seed");
-const data = require("../db/data/test-data");
+const db = require("../connection");
+const format = require("pg-format");
+const { putDataInArray } = require("./utils");
 
-beforeAll(() => seed(data));
-afterAll(() => db.end());
-
-describe("seed", () => {
-  describe("users table", () => {
-    test("create users table", () => {
-      return db
-        .query(
-          `SELECT EXISTS (
-                        SELECT FROM 
-                        information_schema.tables
-                        WHERE 
-                        table_name = 'users'
-                    );`
-        )
-        .then(({ rows: [{ exists }] }) => {
-          expect(exists).toBe(true);
-        });
-    });
-    test("users table has user_id column", () => {
-      return db
-        .query(
-          `SELECT column_name, data_type, column_default
-                            FROM information_schema.columns
-                            WHERE table_name = 'users'
-                            AND column_name = 'user_id';`
-        )
-        .then(({ rows: [column] }) => {
-          expect(column.column_name).toBe("user_id");
-        });
-    });
-    test("users table has username column", () => {
-      return db
-        .query(
-          `SELECT column_name, data_type, column_default
-                            FROM information_schema.columns
-                            WHERE table_name = 'users'
-                            AND column_name = 'username';`
-        )
-        .then(({ rows: [column] }) => {
-          expect(column.column_name).toBe("username");
-        });
-    });
-    test("users table has email column", () => {
-      return db
-        .query(
-          `SELECT column_name, data_type, column_default
-                            FROM information_schema.columns
-                            WHERE table_name = 'users'
-                            AND column_name = 'email';`
-        )
-        .then(({ rows: [column] }) => {
-          expect(column.column_name).toBe("email");
-        });
-    });
-    test("users table has age column", () => {
-      return db
-        .query(
-          `SELECT column_name, data_type, column_default
-                            FROM information_schema.columns
-                            WHERE table_name = 'users'
-                            AND column_name = 'age';`
-        )
-        .then(({ rows: [column] }) => {
-          expect(column.column_name).toBe("age");
-        });
-    });
-    test("users table has bio column", () => {
-      return db
-        .query(
-          `SELECT column_name, data_type, column_default
-                            FROM information_schema.columns
-                            WHERE table_name = 'users'
-                            AND column_name = 'bio';`
-        )
-        .then(({ rows: [column] }) => {
-          expect(column.column_name).toBe("bio");
-        });
-    });
-    test("users table has region column", () => {
-      return db
-        .query(
-          `SELECT column_name, data_type, column_default
-                            FROM information_schema.columns
-                            WHERE table_name = 'users'
-                            AND column_name = 'region';`
-        )
-        .then(({ rows: [column] }) => {
-          expect(column.column_name).toBe("region");
-        });
-    });
-    test("users table has city column", () => {
-      return db
-        .query(
-          `SELECT column_name, data_type, column_default
-                            FROM information_schema.columns
-                            WHERE table_name = 'users'
-                            AND column_name = 'city';`
-        )
-        .then(({ rows: [column] }) => {
-          expect(column.column_name).toBe("city");
-        });
-    });
-    test("users table has type_of_biking column", () => {
-      return db
-        .query(
-          `SELECT column_name, data_type, column_default
-                            FROM information_schema.columns
-                            WHERE table_name = 'users'
-                            AND column_name = 'type_of_biking';`
-        )
-        .then(({ rows: [column] }) => {
-          expect(column.column_name).toBe("type_of_biking");
-        });
-    });
-    test("users table has difficulty column", () => {
-      return db
-        .query(
-          `SELECT column_name, data_type, column_default
-                            FROM information_schema.columns
-                            WHERE table_name = 'users'
-                            AND column_name = 'difficulty';`
-        )
-        .then(({ rows: [column] }) => {
-          expect(column.column_name).toBe("difficulty");
-        });
-    });
-    test("users table has distance column", () => {
-      return db
-        .query(
-          `SELECT column_name, data_type, column_default
-                            FROM information_schema.columns
-                            WHERE table_name = 'users'
-                            AND column_name = 'distance';`
-        )
-        .then(({ rows: [column] }) => {
-          expect(column.column_name).toBe("distance");
-        });
-    });
-    test("users table has rating column", () => {
-      return db
-        .query(
-          `SELECT column_name, data_type, column_default
-                            FROM information_schema.columns
-                            WHERE table_name = 'users'
-                            AND column_name = 'rating';`
-        )
-        .then(({ rows: [column] }) => {
-          expect(column.column_name).toBe("rating");
-        });
-    });
-    test("users table has avatar_url column", () => {
-      return db
-        .query(
-          `SELECT column_name, data_type, column_default
-                            FROM information_schema.columns
-                            WHERE table_name = 'users'
-                            AND column_name = 'avatar_url';`
-        )
-        .then(({ rows: [column] }) => {
-          expect(column.column_name).toBe("avatar_url");
-        });
-    });
+function seed({
+  userData,
+  ageFilters,
+  difficultyFilters,
+  distanceFilters,
+  typeFilters,
+  requestsData,
+}) {
+  const filtersJSON = JSON.stringify({
+    age: ageFilters.map((filter) => filter.age),
+    difficulty: difficultyFilters.map((filter) => filter.difficulty),
+    distance: distanceFilters.map((filter) => filter.distance),
+    type: typeFilters.map((filter) => filter.type),
   });
-  describe("data insertion", () => {
-    test("users data has been inserted correctly", () => {
-      return db.query(`SELECT * FROM users;`).then(({ rows: users }) => {
-        expect(users).toHaveLength(6);
-        users.forEach((user) => {
-          expect(user).toHaveProperty("user_id");
-          expect(user).toHaveProperty("username");
-          expect(user).toHaveProperty("email");
-          expect(user).toHaveProperty("age");
-          expect(user).toHaveProperty("bio");
-          expect(user).toHaveProperty("region");
-          expect(user).toHaveProperty("city");
-          expect(user).toHaveProperty("type_of_biking");
-          expect(user).toHaveProperty("rating");
-          expect(user).toHaveProperty("avatar_url");
-          expect(user).toHaveProperty("distance");
-          expect(user).toHaveProperty("difficulty");
-        });
-      });
-    });
-  });
-  describe("data insertion", () => {
-    test("age filters data has been inserted correctly", () => {
-      return db
-        .query(`SELECT DISTINCT age FROM filters WHERE age IS NOT NULL;`)
-        .then(({ rows }) => {
-          expect(rows.length).toBeGreaterThan(0);
-        });
-    });
 
-    test("type filters data has been inserted correctly", () => {
-      return db
-        .query(`SELECT DISTINCT type FROM filters WHERE type IS NOT NULL;`)
-        .then(({ rows }) => {
-          expect(rows.length).toBeGreaterThan(0);
-        });
-    });
+  return db
+    .query("DROP TABLE IF EXISTS requests;")
+    .query("DROP TABLE IF EXISTS users;")
+    .then(() => db.query("DROP TABLE IF EXISTS filters;"))
+    .then(() => createUsers())
+    .then(() => insertUsersData(userData))
+    .then(() => createFilters())
+    .then(() => insertFilters(filtersJSON))
+    .then(() => createRequests())
+    .then(() => insertRequestsData(requestsData));
+}
 
-    test("difficulty filters data has been inserted correctly", () => {
-      return db
-        .query(
-          `SELECT DISTINCT difficulty FROM filters WHERE difficulty IS NOT NULL;`
-        )
-        .then(({ rows }) => {
-          expect(rows.length).toBeGreaterThan(0);
-        });
-    });
+function createUsers() {
+  return db.query(`
+    CREATE TABLE users (
+      user_id SERIAL PRIMARY KEY,
+      username VARCHAR NOT NULL,
+      email VARCHAR NOT NULL,
+      age VARCHAR NOT NULL,
+      bio VARCHAR,
+      region VARCHAR NOT NULL,
+      city VARCHAR NOT NULL,
+      type_of_biking VARCHAR NOT NULL,
+      difficulty VARCHAR NOT NULL,
+      distance VARCHAR,
+      rating INT,
+      avatar_url VARCHAR NOT NULL
+    );`);
+}
 
-    test("distance filters data has been inserted correctly", () => {
-      return db
-        .query(
-          `SELECT DISTINCT distance FROM filters WHERE distance IS NOT NULL;`
-        )
-        .then(({ rows }) => {
-          expect(rows.length).toBeGreaterThan(0);
-        });
-    });
-  });
-});
+function insertUsersData(usersToInsert) {
+  const userInsertStr = format(
+    `
+    INSERT INTO users
+      (username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, avatar_url)
+      VALUES %L
+      RETURNING *;`,
+    putDataInArray(usersToInsert)
+  );
+  return db.query(userInsertStr);
+}
+
+function createFilters() {
+  return db.query(`
+    CREATE TABLE filters (
+      id SERIAL PRIMARY KEY,
+      data JSONB
+    );`);
+}
+
+function insertFilters(filtersJSON) {
+  const insertStr = format(
+    `
+    INSERT INTO filters (data) VALUES (%L)
+    RETURNING *;`,
+    filtersJSON
+  );
+  return db.query(insertStr);
+}
+
+function createRequests() {
+  return db.query(`CREATE TABLE requests (
+    request_id SERIAL PRIMARY KEY,
+    sender_id INT REFERENCES users(user_id) NOT NULL,
+    receiver_id INT REFERENCES users(user_id) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    status VARCHAR NOT NULL
+    );`);
+}
+
+function insertRequestsData(requestsToInsert) {
+  const requestsInsertStr = format(
+    `INSERT INTO requests
+        (sender_id, receiver_id, status) 
+        VALUES %L
+        RETURNING *;`,
+    putDataInArray(requestsToInsert)
+  );
+  return db.query(requestsInsertStr);
+}
+
+module.exports = seed;
