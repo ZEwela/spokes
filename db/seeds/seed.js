@@ -1,6 +1,6 @@
 const db = require("../connection");
 const format = require("pg-format");
-const { putDataInArray } = require("./utils");
+const { putDataInArray, convertTimestampToDate } = require("./utils");
 
 function seed({
   userData,
@@ -73,12 +73,13 @@ function createRequests() {
 }
 
 function insertRequestsData(requestsToInsert) {
+  const formattedRequestsData = requestsToInsert.map(convertTimestampToDate);
     const requestsInsertStr = format(
         `INSERT INTO requests
-        (sender_id, receiver_id, status) 
+        (sender_id, receiver_id, status, created_at) 
         VALUES %L
         RETURNING *;`, 
-        putDataInArray(requestsToInsert)
+        putDataInArray(formattedRequestsData)
         )
     return db.query(requestsInsertStr)
 }
