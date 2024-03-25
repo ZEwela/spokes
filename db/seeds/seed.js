@@ -9,7 +9,6 @@ function seed({
   distanceFilters,
   typeFilters,
 }) {
-  // Transform filters into a single JSON object string
   const filtersJSON = JSON.stringify({
     age: ageFilters.map((filter) => filter.age),
     difficulty: difficultyFilters.map((filter) => filter.difficulty),
@@ -23,7 +22,7 @@ function seed({
     .then(() => createUsers())
     .then(() => insertUsersData(userData))
     .then(() => createFilters())
-    .then(() => insertFilters(filtersJSON)); // Insert the filters as a single operation
+    .then(() => insertFilters(filtersJSON));
 }
 
 function createUsers() {

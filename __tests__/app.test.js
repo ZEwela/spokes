@@ -145,13 +145,14 @@ describe("/users", () => {
     });
   });
 });
-describe("routing errors", () => {
-  test("GET 404: responds with appropriate error message", () => {
-    return request(app)
-      .get("/api/not-a-route")
+
+describe('routing errors', () => {
+  test('GET 404: responds with appropriate error message', () => {
+      return request(app)
+      .get('/api/not-a-route')
       .expect(404)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Path not found");
-      });
+      .then(({body: {msg}}) => {
+          expect(msg).toBe('Path not found');
+      })
   });
 });
