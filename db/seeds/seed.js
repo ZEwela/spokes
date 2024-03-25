@@ -8,6 +8,7 @@ function seed({
   difficultyFilters,
   distanceFilters,
   typeFilters,
+  requestsData,
 }) {
   const filtersJSON = JSON.stringify({
     age: ageFilters.map((filter) => filter.age),
@@ -17,12 +18,15 @@ function seed({
   });
 
   return db
+    .query("DROP TABLE IF EXISTS requests;")
     .query("DROP TABLE IF EXISTS users;")
     .then(() => db.query("DROP TABLE IF EXISTS filters;"))
     .then(() => createUsers())
     .then(() => insertUsersData(userData))
     .then(() => createFilters())
-    .then(() => insertFilters(filtersJSON));
+    .then(() => insertFilters(filtersJSON))
+    .then(() => createRequests())
+    .then(() => insertRequestsData(requestsData));
 }
 
 function createUsers() {
@@ -71,6 +75,27 @@ function insertFilters(filtersJSON) {
     filtersJSON
   );
   return db.query(insertStr);
+}
+
+function createRequests() {
+  return db.query(`CREATE TABLE requests (
+    request_id SERIAL PRIMARY KEY,
+    sender_id INT REFERENCES users(user_id) NOT NULL,
+    receiver_id INT REFERENCES users(user_id) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    status VARCHAR NOT NULL
+    );`);
+}
+
+function insertRequestsData(requestsToInsert) {
+  const requestsInsertStr = format(
+    `INSERT INTO requests
+        (sender_id, receiver_id, status) 
+        VALUES %L
+        RETURNING *;`,
+    putDataInArray(requestsToInsert)
+  );
+  return db.query(requestsInsertStr);
 }
 
 module.exports = seed;
