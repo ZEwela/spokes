@@ -14,9 +14,6 @@ exports.readFilters = () => {
   return db
     .query("SELECT * FROM filters;")
     .then((result) => result.rows)
-    .then((result) => {
-      console.log(result);
-    })
     .catch((error) => {
       console.error("Error querying the database:", error);
       throw error;
