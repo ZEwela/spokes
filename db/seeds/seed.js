@@ -9,40 +9,48 @@ function seed({
   distanceFilters,
   typeFilters,
 }) {
+  // Transform filters into a single JSON object string
+  const filtersJSON = JSON.stringify({
+    age: ageFilters.map((filter) => filter.age),
+    difficulty: difficultyFilters.map((filter) => filter.difficulty),
+    distance: distanceFilters.map((filter) => filter.distance),
+    type: typeFilters.map((filter) => filter.type),
+  });
+
   return db
     .query("DROP TABLE IF EXISTS users;")
     .then(() => db.query("DROP TABLE IF EXISTS filters;"))
     .then(() => createUsers())
     .then(() => insertUsersData(userData))
     .then(() => createFilters())
-    .then(() => insertAgeFilters(ageFilters))
-    .then(() => insertDifficultyFilters(difficultyFilters))
-    .then(() => insertDistanceFilters(distanceFilters))
-    .then(() => insertTypeFilters(typeFilters));
+    .then(() => insertFilters(filtersJSON)); // Insert the filters as a single operation
 }
 
 function createUsers() {
-  return db.query(`CREATE TABLE users (
-        user_id SERIAL PRIMARY KEY,
-        username VARCHAR NOT NULL,
-        email VARCHAR NOT NULL,
-        age VARCHAR NOT NULL,
-        bio VARCHAR,
-        region VARCHAR NOT NULL,
-        city VARCHAR NOT NULL,
-        type_of_biking VARCHAR NOT NULL,
-        difficulty VARCHAR NOT NULL,
-        distance VARCHAR,
-        rating INT,
-        avatar_url VARCHAR NOT NULL);`);
+  return db.query(`
+    CREATE TABLE users (
+      user_id SERIAL PRIMARY KEY,
+      username VARCHAR NOT NULL,
+      email VARCHAR NOT NULL,
+      age VARCHAR NOT NULL,
+      bio VARCHAR,
+      region VARCHAR NOT NULL,
+      city VARCHAR NOT NULL,
+      type_of_biking VARCHAR NOT NULL,
+      difficulty VARCHAR NOT NULL,
+      distance VARCHAR,
+      rating INT,
+      avatar_url VARCHAR NOT NULL
+    );`);
 }
 
 function insertUsersData(usersToInsert) {
   const userInsertStr = format(
-    `INSERT INTO users
-        (username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, avatar_url)
-        VALUES %L
-        RETURNING *;`,
+    `
+    INSERT INTO users
+      (username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, avatar_url)
+      VALUES %L
+      RETURNING *;`,
     putDataInArray(usersToInsert)
   );
   return db.query(userInsertStr);
@@ -50,42 +58,18 @@ function insertUsersData(usersToInsert) {
 
 function createFilters() {
   return db.query(`
-  CREATE TABLE filters (
-    age VARCHAR,
-    type VARCHAR,
-    difficulty VARCHAR,
-    distance VARCHAR
-  );`);
+    CREATE TABLE filters (
+      id SERIAL PRIMARY KEY,
+      data JSONB
+    );`);
 }
 
-function insertAgeFilters(filters) {
+function insertFilters(filtersJSON) {
   const insertStr = format(
-    `INSERT INTO filters (age) VALUES %L RETURNING *;`,
-    filters.map((filter) => [filter.age])
-  );
-  return db.query(insertStr);
-}
-
-function insertDifficultyFilters(filters) {
-  const insertStr = format(
-    `INSERT INTO filters (difficulty) VALUES %L RETURNING *;`,
-    filters.map((filter) => [filter.difficulty])
-  );
-  return db.query(insertStr);
-}
-
-function insertDistanceFilters(filters) {
-  const insertStr = format(
-    `INSERT INTO filters (distance) VALUES %L RETURNING *;`,
-    filters.map((filter) => [filter.distance])
-  );
-  return db.query(insertStr);
-}
-
-function insertTypeFilters(filters) {
-  const insertStr = format(
-    `INSERT INTO filters (type) VALUES %L RETURNING *;`,
-    filters.map((filter) => [filter.type])
+    `
+    INSERT INTO filters (data) VALUES (%L)
+    RETURNING *;`,
+    filtersJSON
   );
   return db.query(insertStr);
 }
