@@ -28,6 +28,7 @@ describe("/api", () => {
   });
 });
 
+
 describe("GET /api/filters", () => {
   test("GET:200 responds with filters data", () => {
     return request(app)
@@ -37,4 +38,83 @@ describe("GET /api/filters", () => {
         console.log(res.body);
       });
   });
+
+describe('/users', () => {
+    describe('GET requests', () => {
+        test('GET 200: responds with an array of users', () => {
+            return request(app)
+            .get('/api/users')
+            .expect(200)
+            .then(({body: {users}}) => {
+                expect(users).toHaveLength(6);
+                users.forEach((user) => {
+                    expect(user).toMatchObject({
+                        user_id: expect.any(Number),
+                        username: expect.any(String),
+                        email: expect.any(String),
+                        age: expect.any(String),
+                        bio: expect.any(String),
+                        region: expect.any(String),
+                        city: expect.any(String),
+                        type_of_biking: expect.any(String),
+                        difficulty: expect.any(String),
+                        distance: expect.any(String),
+                        rating: expect.any(Number),
+                        avatar_url: expect.any(String),
+                    })
+                })
+            })
+        });
+        test('GET 200: responds with a single user', () => {
+          return request(app)
+          .get('/api/users/1')
+          .expect(200)
+          .then(({body: {user}}) => {
+            expect(user).toMatchObject({
+              user_id: expect.any(Number),
+              username: expect.any(String),
+              email: expect.any(String),
+              age: expect.any(String),
+              bio: expect.any(String),
+              region: expect.any(String),
+              city: expect.any(String),
+              type_of_biking: expect.any(String),
+              difficulty: expect.any(String),
+              distance: expect.any(String),
+              rating: expect.any(Number),
+              avatar_url: expect.any(String),
+            })
+          })
+        });
+      describe('errors', () => {
+        test('GET 400: responds with appropriate error message when given an invalid path', () => {
+        return request(app)
+        .get('/api/users/invalidid')
+        .expect(400)
+        .then(({body: {msg}}) => {
+          expect(msg).toBe('Bad Request');
+        })
+        });
+        test('GET 404: responds with appropriate error message when passed a valid but non existent id', () => {
+          return request(app)
+          .get('/api/users/0')
+          .expect(404)
+          .then(({body: {msg}}) => {
+            expect(msg).toBe('User Not Found!');
+        })
+        });
+      });
+    });
+});
+describe('routing errors', () => {
+    test('GET 404: responds with appropriate error message', () => {
+        return request(app)
+        .get('/api/not-a-route')
+        .expect(404)
+        .then(({body: {msg}}) => {
+            expect(msg).toBe('Path not found');
+        })
+    });
+    
+
 });
