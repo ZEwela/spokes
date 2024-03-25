@@ -38,6 +38,7 @@ describe("GET /api/filters", () => {
         console.log(res.body);
       });
   });
+});
 
 describe('/users', () => {
     describe('GET requests', () => {
@@ -107,14 +108,12 @@ describe('/users', () => {
     });
 });
 describe('routing errors', () => {
-    test('GET 404: responds with appropriate error message', () => {
-        return request(app)
-        .get('/api/not-a-route')
-        .expect(404)
-        .then(({body: {msg}}) => {
-            expect(msg).toBe('Path not found');
-        })
-    });
-    
-
+  test('GET 404: responds with appropriate error message', () => {
+      return request(app)
+      .get('/api/not-a-route')
+      .expect(404)
+      .then(({body: {msg}}) => {
+          expect(msg).toBe('Path not found');
+      })
+  });
 });

@@ -1,4 +1,3 @@
-
 const seed = require("./seed");
 const db = require("../connection");
 
