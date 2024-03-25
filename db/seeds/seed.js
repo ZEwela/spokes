@@ -8,17 +8,21 @@ function seed({
   difficultyFilters,
   distanceFilters,
   typeFilters,
+  requestsData
 }) {
   return db
-    .query("DROP TABLE IF EXISTS users;")
+    .query("DROP TABLE IF EXISTS requests;")
     .then(() => db.query("DROP TABLE IF EXISTS filters;"))
+    .then(() => db.query("DROP TABLE IF EXISTS users;"))
     .then(() => createUsers())
-    .then(() => insertUsersData(userData))
     .then(() => createFilters())
+    .then(() => createRequests())
+    .then(() => insertUsersData(userData))
     .then(() => insertAgeFilters(ageFilters))
     .then(() => insertDifficultyFilters(difficultyFilters))
     .then(() => insertDistanceFilters(distanceFilters))
-    .then(() => insertTypeFilters(typeFilters));
+    .then(() => insertTypeFilters(typeFilters))
+    .then(() => insertRequestsData(requestsData))
 }
 
 function createUsers() {
@@ -56,6 +60,27 @@ function createFilters() {
     difficulty VARCHAR,
     distance VARCHAR
   );`);
+}
+
+function createRequests() {
+    return db.query(`CREATE TABLE requests (
+    request_id SERIAL PRIMARY KEY,
+    sender_id INT REFERENCES users(user_id) NOT NULL,
+    receiver_id INT REFERENCES users(user_id) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    status VARCHAR NOT NULL
+    );`)  
+}
+
+function insertRequestsData(requestsToInsert) {
+    const requestsInsertStr = format(
+        `INSERT INTO requests
+        (sender_id, receiver_id, status) 
+        VALUES %L
+        RETURNING *;`, 
+        putDataInArray(requestsToInsert)
+        )
+    return db.query(requestsInsertStr)
 }
 
 function insertAgeFilters(filters) {
