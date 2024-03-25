@@ -17,16 +17,15 @@ function seed({
     type: typeFilters.map((filter) => filter.type),
   });
 
-  return db
-    .query("DROP TABLE IF EXISTS requests;")
-    .query("DROP TABLE IF EXISTS users;")
-    .then(() => db.query("DROP TABLE IF EXISTS filters;"))
-    .then(() => createUsers())
-    .then(() => insertUsersData(userData))
-    .then(() => createFilters())
-    .then(() => insertFilters(filtersJSON))
-    .then(() => createRequests())
-    .then(() => insertRequestsData(requestsData));
+db.query("DROP TABLE IF EXISTS requests;")
+  .then(() => db.query("DROP TABLE IF EXISTS users;"))
+  .then(() => db.query("DROP TABLE IF EXISTS filters;"))
+  .then(() => createUsers())
+  .then(() => insertUsersData(userData))
+  .then(() => createFilters())
+  .then(() => insertFilters(filtersJSON))
+  .then(() => createRequests())
+  .then(() => insertRequestsData(requestsData));
 }
 
 function createUsers() {
