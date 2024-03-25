@@ -27,3 +27,14 @@ describe("/api", () => {
       });
   });
 });
+
+describe("GET /api/filters", () => {
+  test("GET:200 responds with filters data", () => {
+    return request(app)
+      .get("/api/filters")
+      .expect(200)
+      .then((res) => {
+        console.log(res.body);
+      });
+  });
+});

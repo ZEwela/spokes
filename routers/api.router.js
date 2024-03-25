@@ -1,7 +1,8 @@
-const { getEndpoints } = require('../controllers/api.controllers')
+const { getEndpoints, getFilters } = require("../controllers/api.controllers");
 
-const apiRouter = require('express').Router()
+const apiRouter = require("express").Router();
 
-apiRouter.get('/', getEndpoints)
+apiRouter.get("/", getEndpoints);
+apiRouter.get("/filters", getFilters);
 
-module.exports = apiRouter
+module.exports = apiRouter;

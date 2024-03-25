@@ -1,1 +1,5 @@
-exports.userData = require('./users')
+exports.userData = require("./users");
+exports.ageFilters = require("./age");
+exports.difficultyFilters = require("./difficulty");
+exports.distanceFilters = require("./distance");
+exports.typeFilters = require("./type");
