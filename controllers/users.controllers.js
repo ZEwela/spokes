@@ -1,4 +1,4 @@
-const { selectUsers, selectSingleUser, selectRequestsByUserId, insertRequest, insertUser, updateUserRating updateUser} = require("../models/users.models")
+const { selectUsers, selectSingleUser, selectRequestsByUserId, insertRequest, insertUser, updateUserRating ,updateUser} = require("../models/users.models")
 
 exports.getUsers = (req, res, next) => {
   selectUsers().then((users) => {
