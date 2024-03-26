@@ -260,6 +260,74 @@ describe("/users/:user_id/requests", () => {
   });
 });
 
+describe('/users/:user_id/rating', () => {
+  test('PATCH 200: responds with correctly updated user rating for a user with 0 ratings', () => {
+    return request(app)
+    .patch("/api/users/2/rating")
+    .send( {new_rating: 3})
+    .expect(200)
+    .then(({body: {user}}) => {
+      expect(user).toMatchObject({
+        user_id: expect.any(Number),
+              username: expect.any(String),
+              email: expect.any(String),
+              age: expect.any(String),
+              bio: expect.any(String),
+              region: expect.any(String),
+              city: expect.any(String),
+              type_of_biking: expect.any(String),
+              difficulty: expect.any(String),
+              distance: expect.any(String),
+              rating: 3,
+              rating_count: 1,
+              avatar_url: expect.any(String)
+      })
+    })
+  });
+  test('PATCH 200: responds with correctly updated user rating for a user with existing ratings', () => {
+    return request(app)
+    .patch("/api/users/1/rating")
+    .send( {new_rating: 2})
+    .expect(200)
+    .then(({body: {user}}) => {
+      expect(user).toMatchObject({
+        user_id: expect.any(Number),
+              username: expect.any(String),
+              email: expect.any(String),
+              age: expect.any(String),
+              bio: expect.any(String),
+              region: expect.any(String),
+              city: expect.any(String),
+              type_of_biking: expect.any(String),
+              difficulty: expect.any(String),
+              distance: expect.any(String),
+              rating: 3,
+              rating_count: 2,
+              avatar_url: expect.any(String)
+      })
+    })
+  });
+  test('PATCH 404: responds with correct status and error message when rating a user that does not exist', () => {
+    return request(app)
+    .patch("/api/users/99999999/rating")
+    .send( {new_rating: 2})
+    .expect(404)
+    .then(({ body: {msg}}) => {
+      console.log(msg);
+      expect(msg).toBe("User Not Found!");
+    })
+  });
+  test('PATCH 400: responds with correct status and error message when requesting invalid ID', () => {
+    return request(app)
+        .patch("/api/users/forklift/rating")
+        .send({ new_rating: 1 })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad Request");
+        });
+  });
+});
+
 describe("routing errors", () => {
   test("GET 404: responds with appropriate error message", () => {
     return request(app)

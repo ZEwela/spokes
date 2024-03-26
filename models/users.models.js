@@ -76,3 +76,18 @@ exports.selectRequestsByUserId = (user_id, status='pending', order='desc', type=
         return rows
     })
 }
+
+exports.updateUserRating = (updatedRating, user_id) => {
+    return db.query(
+        `UPDATE users
+        SET
+        rating = $1,
+        rating_count = rating_count + 1
+        WHERE user_id = $2
+        RETURNING *;`,
+        [updatedRating, user_id]
+    )
+    .then(({rows}) => {
+        return rows[0];
+    })
+}

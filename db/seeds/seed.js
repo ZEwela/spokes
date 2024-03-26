@@ -42,6 +42,7 @@ function createUsers() {
       difficulty VARCHAR NOT NULL,
       distance VARCHAR,
       rating INT,
+      rating_count INT DEFAULT 0,
       avatar_url VARCHAR NOT NULL
     );`);
 }
@@ -50,7 +51,7 @@ function insertUsersData(usersToInsert) {
   const userInsertStr = format(
     `
     INSERT INTO users
-      (username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, avatar_url)
+      (username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, rating_count, avatar_url)
       VALUES %L
       RETURNING *;`,
     putDataInArray(usersToInsert)
