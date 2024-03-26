@@ -115,3 +115,17 @@ exports.insertRequest = ({sender_id, receiver_id}) => {
     
 }
 
+exports.deleteUserById = (user_id) => {
+    return db.query(`DELETE FROM requests WHERE sender_id = $1 OR receiver_id = $1`, [user_id])
+        .then(() => {
+            return db.query(`DELETE FROM users WHERE user_id = $1`, [user_id]);
+        })
+        .then((result) => {
+            if (result.rowCount === 0) {
+                return Promise.reject({
+                    status: 404,
+                    msg: 'User Not Found!'
+                });
+            }
+        })
+};

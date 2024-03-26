@@ -1,5 +1,4 @@
-
-const { selectUsers, selectSingleUser, selectRequestsByUserId, insertRequest, insertUser, updateUserRating } = require("../models/users.models")
+const { selectUsers, selectSingleUser, selectRequestsByUserId, insertRequest, insertUser, updateUserRating, deleteUserById } = require("../models/users.models")
 
 exports.getUsers = (req, res, next) => {
   selectUsers().then((users) => {
@@ -53,8 +52,6 @@ exports.patchUserRating = (req, res, next) => {
     .catch(next);
 };
 
-}
-
 
 exports.createUser = (req, res, next) => {
     const newUser = {
@@ -94,3 +91,13 @@ exports.postRequestByUserId = (req, res, next) => {
     });
 }
 
+exports.deleteUser = (req, res, next) => {
+    const { user_id } = req.params;
+    deleteUserById(user_id)
+      .then(() => {
+        res.status(204).end();
+      })
+      .catch((err) => {
+        next(err);
+      });
+};

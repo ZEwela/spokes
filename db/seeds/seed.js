@@ -99,6 +99,7 @@ function insertRequestsData(requestsToInsert) {
     return db.query(requestsInsertStr)
 }
 
+
 // function insertAgeFilters(filters) {
 //   const insertStr = format(
 //     `INSERT INTO filters (age) VALUES %L RETURNING *;`,
