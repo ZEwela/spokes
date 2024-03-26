@@ -76,3 +76,14 @@ exports.selectRequestsByUserId = (user_id, status='pending', order='desc', type=
         return rows
     })
 }
+
+exports.insertRequest = ({sender_id, receiver_id, status}) => {
+    const queryValues = [sender_id, receiver_id, status]
+    console.log(queryValues)
+    return db.query(`INSERT INTO requests 
+        (sender_id, receiver_id, status)
+        VALUES ($1, $2, $3)
+        RETURNING *;`, queryValues)
+    .then(({rows}) =>  { console.log(rows); return rows[0] })
+    
+}

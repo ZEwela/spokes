@@ -1,4 +1,4 @@
-const { selectUsers, selectSingleUser, selectRequestsByUserId } = require("../models/users.models")
+const { selectUsers, selectSingleUser, selectRequestsByUserId, insertRequest } = require("../models/users.models")
 
 exports.getUsers = (req, res, next) => {
     selectUsers().then((users) => {
@@ -25,6 +25,22 @@ exports.getRequestsByUserId = (req, res, next) => {
         res.status(200).send({requests: resolvePromises[1]})
     })
     .catch((err) => {
+        console.log(err)
         next(err)
     })
+}
+
+exports.postRequestByUserId = (req, res, next) => {
+    const { user_id } = req.params;
+    const body = req.body;
+
+
+    insertRequest(body)
+    .then((request) => {
+      res.status(201).send({ request });
+    })
+    .catch((err) => {
+        console.log(err)
+      next(err);
+    });
 }

@@ -17,15 +17,15 @@ function seed({
     type: typeFilters.map((filter) => filter.type),
   });
 
-db.query("DROP TABLE IF EXISTS requests;")
-  .then(() => db.query("DROP TABLE IF EXISTS users;"))
-  .then(() => db.query("DROP TABLE IF EXISTS filters;"))
-  .then(() => createUsers())
-  .then(() => insertUsersData(userData))
-  .then(() => createFilters())
-  .then(() => insertFilters(filtersJSON))
-  .then(() => createRequests())
-  .then(() => insertRequestsData(requestsData));
+return db.query("DROP TABLE IF EXISTS requests;")
+  .then(() => {return db.query("DROP TABLE IF EXISTS users;")})
+  .then(() => {return db.query("DROP TABLE IF EXISTS filters;")})
+  .then(() => {return createUsers()})
+  .then(() => { return insertUsersData(userData)})
+  // .then(() => createFilters())
+  // .then(() => insertFilters(filtersJSON))
+  .then(() => {return createRequests()})
+  .then(() => {return insertRequestsData(requestsData)});
 }
 
 function createUsers() {
@@ -58,23 +58,23 @@ function insertUsersData(usersToInsert) {
   return db.query(userInsertStr);
 }
 
-function createFilters() {
-  return db.query(`
-    CREATE TABLE filters (
-      id SERIAL PRIMARY KEY,
-      data JSONB
-    );`);
-}
+// function createFilters() {
+//   return db.query(`
+//     CREATE TABLE filters (
+//       id SERIAL PRIMARY KEY,
+//       data JSONB
+//     );`);
+// }
 
-function insertFilters(filtersJSON) {
-  const insertStr = format(
-    `
-    INSERT INTO filters (data) VALUES (%L)
-    RETURNING *;`,
-    filtersJSON
-  );
-  return db.query(insertStr);
-}
+// function insertFilters(filtersJSON) {
+//   const insertStr = format(
+//     `
+//     INSERT INTO filters (data) VALUES (%L)
+//     RETURNING *;`,
+//     filtersJSON
+//   );
+//   return db.query(insertStr);
+// }
 
 function createRequests() {
   return db.query(`CREATE TABLE requests (
@@ -98,36 +98,36 @@ function insertRequestsData(requestsToInsert) {
     return db.query(requestsInsertStr)
 }
 
-function insertAgeFilters(filters) {
-  const insertStr = format(
-    `INSERT INTO filters (age) VALUES %L RETURNING *;`,
-    filters.map((filter) => [filter.age])
-  );
-  return db.query(insertStr);
-}
+// function insertAgeFilters(filters) {
+//   const insertStr = format(
+//     `INSERT INTO filters (age) VALUES %L RETURNING *;`,
+//     filters.map((filter) => [filter.age])
+//   );
+//   return db.query(insertStr);
+// }
 
-function insertDifficultyFilters(filters) {
-  const insertStr = format(
-    `INSERT INTO filters (difficulty) VALUES %L RETURNING *;`,
-    filters.map((filter) => [filter.difficulty])
-  );
-  return db.query(insertStr);
-}
+// function insertDifficultyFilters(filters) {
+//   const insertStr = format(
+//     `INSERT INTO filters (difficulty) VALUES %L RETURNING *;`,
+//     filters.map((filter) => [filter.difficulty])
+//   );
+//   return db.query(insertStr);
+// }
 
-function insertDistanceFilters(filters) {
-  const insertStr = format(
-    `INSERT INTO filters (distance) VALUES %L RETURNING *;`,
-    filters.map((filter) => [filter.distance])
-  );
-  return db.query(insertStr);
-}
+// function insertDistanceFilters(filters) {
+//   const insertStr = format(
+//     `INSERT INTO filters (distance) VALUES %L RETURNING *;`,
+//     filters.map((filter) => [filter.distance])
+//   );
+//   return db.query(insertStr);
+// }
 
-function insertTypeFilters(filters) {
-  const insertStr = format(
-    `INSERT INTO filters (type) VALUES %L RETURNING *;`,
-    filters.map((filter) => [filter.type])
-  );
-  return db.query(insertStr);
-}
+// function insertTypeFilters(filters) {
+//   const insertStr = format(
+//     `INSERT INTO filters (type) VALUES %L RETURNING *;`,
+//     filters.map((filter) => [filter.type])
+//   );
+//   return db.query(insertStr);
+// }
 
 module.exports = seed;

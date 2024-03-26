@@ -77,6 +77,7 @@ describe("error test for filter that doesn't exist", () => {
     return request(app).get("/api/filters/panda").expect(404);
   });
 });
+});
 
 describe("/users", () => {
   describe("GET requests", () => {
@@ -258,6 +259,45 @@ describe('/users/:user_id/requests', () => {
       });
     })
   })
+  describe('POST /users/:user_id/requests', () => {
+    test('POST 201: returns a new request and ignores unnecessary properties', () => {
+      const newRequestBody = {
+        sender_id: 2,
+        receiver_id: 5,
+        status: 'pending',
+        to_ignore: 'ignore me pls'
+      }
+
+      return request(app)
+        .post(`/api/users/${newRequestBody.sender_id}/requests`)
+        .send(newRequestBody)
+        .expect(201)
+        .then(({body: {request}}) => {
+          expect(request).toMatchObject({
+            request_id: expect.any(Number),
+            sender_id: expect.any(Number),
+            receiver_id: expect.any(Number),
+            created_at: expect.any(String),
+            status: expect.any(String)
+          })
+          expect(request).not.toHaveProperty("to_ignore");
+        })
+    })
+    test("POST 400: returns an error when the request body does not contain all the required values", () => {
+      const newRequestBody = {
+        sender_id: 2,
+        receiver_id: 5
+      }
+  
+      return request(app)
+        .post(`/api/users/${newRequestBody.sender_id}/requests`)
+        .send(newRequestBody)
+        .expect(400)
+        .then(({body: {msg}}) => {
+          expect(msg).toBe("Bad Request");
+        });
+    });
+  })
 })
 
 describe('routing errors', () => {
@@ -268,7 +308,6 @@ describe('routing errors', () => {
         .then(({body: {msg}}) => {
             expect(msg).toBe('Path not found');
         })
-    });
-    
-  })
-});
+    });    
+})
+
