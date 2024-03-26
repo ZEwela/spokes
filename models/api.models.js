@@ -1,4 +1,3 @@
-const { log } = require("console");
 const fs = require("fs/promises");
 const db = require("../db/connection");
 
@@ -12,8 +11,10 @@ exports.readEndpoints = () => {
 
 exports.readFilters = () => {
   return db
-    .query("SELECT * FROM filters;")
-    .then((result) => result.rows)
+    .query(`SELECT * FROM filters;`)
+    .then((result) => {
+      return result.rows;
+    })
     .catch((error) => {
       console.error("Error querying the database:", error);
       throw error;

@@ -38,7 +38,7 @@ describe("GET /api/filters", () => {
 });
 
 describe("GET /api/filters/type", () => {
-  test("responds with correct filter type", async () => {
+  test("responds with correct filter type", () => {
     return request(app)
       .get("/api/filters/type")
       .expect(200)

@@ -17,7 +17,7 @@ function seed({
     type: typeFilters.map((filter) => filter.type),
   });
 
-db.query("DROP TABLE IF EXISTS requests;")
+return db.query("DROP TABLE IF EXISTS requests;")
   .then(() => db.query("DROP TABLE IF EXISTS users;"))
   .then(() => db.query("DROP TABLE IF EXISTS filters;"))
   .then(() => createUsers())
