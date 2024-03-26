@@ -77,6 +77,19 @@ exports.selectRequestsByUserId = (user_id, status='pending', order='desc', type=
     })
 }
 
+
+exports.insertUser = (user) => {
+    const { username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, avatar_url } = user;
+
+    return db.query(
+        `INSERT INTO users (username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, avatar_url)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+         RETURNING *;`,
+        [username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, avatar_url]
+    )
+    .then(result => result.rows[0]);
+};
+
 exports.insertRequest = ({sender_id, receiver_id}) => {
     return db.query(`INSERT INTO requests 
         (sender_id, receiver_id)
@@ -85,3 +98,4 @@ exports.insertRequest = ({sender_id, receiver_id}) => {
     .then(({rows}) =>  { return rows[0] })
     
 }
+
