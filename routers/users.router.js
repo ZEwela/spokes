@@ -1,11 +1,26 @@
-const { getUsers, getUsersById, getRequestsByUserId, postRequestByUserId, createUser, patchUserRating, deleteUser } = require("../controllers/users.controllers");
-const usersRouter = require('express').Router();
+const {
+  getUsers,
+  getUsersById,
+  getRequestsByUserId,
+  updateUserById,
+  postRequestByUserId,
+  createUser,
+  patchUserRating,
+  deleteRequestByUseID,
+  deleteUser,
+} = require("../controllers/users.controllers");
+
+const usersRouter = require("express").Router();
 
 usersRouter.route("/").get(getUsers).post(createUser);
-usersRouter.route("/:user_id").get(getUsersById).delete(deleteUser);
 
-usersRouter.route("/:user_id/requests").get(getRequestsByUserId);
-usersRouter.route("/:user_id/rating").patch(patchUserRating)
-usersRouter.route("/:user_id/requests").post(postRequestByUserId);
+usersRouter.route("/:user_id").get(getUsersById).patch(updateUserById).delete(deleteUser)
 
-module.exports = usersRouter
+usersRouter
+  .route("/:user_id/requests")
+  .get(getRequestsByUserId)
+  .post(postRequestByUserId)
+
+usersRouter.route("/:user_id/rating").patch(patchUserRating);
+
+module.exports = usersRouter;
