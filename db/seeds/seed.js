@@ -18,14 +18,14 @@ function seed({
   });
 
 return db.query("DROP TABLE IF EXISTS requests;")
-  .then(() => {return db.query("DROP TABLE IF EXISTS users;")})
-  .then(() => {return db.query("DROP TABLE IF EXISTS filters;")})
-  .then(() => {return createUsers()})
-  .then(() => { return insertUsersData(userData)})
-  // .then(() => createFilters())
-  // .then(() => insertFilters(filtersJSON))
-  .then(() => {return createRequests()})
-  .then(() => {return insertRequestsData(requestsData)});
+  .then(() => db.query("DROP TABLE IF EXISTS users;"))
+  .then(() => db.query("DROP TABLE IF EXISTS filters;"))
+  .then(() => createUsers())
+  .then(() => insertUsersData(userData))
+  .then(() => createFilters())
+  .then(() => insertFilters(filtersJSON))
+  .then(() => createRequests())
+  .then(() => insertRequestsData(requestsData));
 }
 
 function createUsers() {
@@ -58,23 +58,23 @@ function insertUsersData(usersToInsert) {
   return db.query(userInsertStr);
 }
 
-// function createFilters() {
-//   return db.query(`
-//     CREATE TABLE filters (
-//       id SERIAL PRIMARY KEY,
-//       data JSONB
-//     );`);
-// }
+function createFilters() {
+  return db.query(`
+    CREATE TABLE filters (
+      id SERIAL PRIMARY KEY,
+      data JSONB
+    );`);
+}
 
-// function insertFilters(filtersJSON) {
-//   const insertStr = format(
-//     `
-//     INSERT INTO filters (data) VALUES (%L)
-//     RETURNING *;`,
-//     filtersJSON
-//   );
-//   return db.query(insertStr);
-// }
+function insertFilters(filtersJSON) {
+  const insertStr = format(
+    `
+    INSERT INTO filters (data) VALUES (%L)
+    RETURNING *;`,
+    filtersJSON
+  );
+  return db.query(insertStr);
+}
 
 function createRequests() {
   return db.query(`CREATE TABLE requests (
@@ -82,7 +82,7 @@ function createRequests() {
     sender_id INT REFERENCES users(user_id) NOT NULL,
     receiver_id INT REFERENCES users(user_id) NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
-    status VARCHAR NOT NULL
+    status VARCHAR DEFAULT 'pending'
     );`);
 }
 

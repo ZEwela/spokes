@@ -3,7 +3,7 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const request = require("supertest");
 const app = require("../app");
-require('jest-sorted');
+require("jest-sorted");
 
 beforeAll(() => seed(data));
 afterAll(() => db.end());
@@ -39,7 +39,7 @@ describe("GET /api/filters", () => {
 });
 
 describe("GET /api/filters/type", () => {
-  test("responds with correct filter type", async () => {
+  test("responds with correct filter type", () => {
     return request(app)
       .get("/api/filters/type")
       .expect(200)
@@ -71,12 +71,12 @@ describe("GET /api/filters/type", () => {
         expect(res.body.filters).toHaveLength(4);
       });
   });
+});
 
 describe("error test for filter that doesn't exist", () => {
   test("responds with error message", async () => {
     return request(app).get("/api/filters/panda").expect(404);
   });
-});
 });
 
 describe("/users", () => {
@@ -147,115 +147,114 @@ describe("/users", () => {
   });
 });
 
-
-describe('/users/:user_id/requests', () => {
-  describe('GET requests', () => {
-    test('GET 200: responds with an array of users and request details. By default, it includes all pending requests associated with the provided user_id, sorted by request creation time in descending order', () => {
-      const user_id = 1
+describe("/users/:user_id/requests", () => {
+  describe("GET requests", () => {
+    test("GET 200: responds with an array of users and request details. By default, it includes all pending requests associated with the provided user_id, sorted by request creation time in descending order", () => {
+      const user_id = 1;
       return request(app)
-      .get(`/api/users/${user_id}/requests`)
-      .expect(200)
-      .then(({body: {requests}}) => {
-        expect(requests).toHaveLength(2)
-        expect(requests).toBeSortedBy('created_at', {descending: true})
-      })
+        .get(`/api/users/${user_id}/requests`)
+        .expect(200)
+        .then(({ body: { requests } }) => {
+          expect(requests).toHaveLength(2);
+          expect(requests).toBeSortedBy("created_at", { descending: true });
+        });
     }),
-    test('GET 200: responds with an empty array when user do not have any pending requests', () => {
-      const user_id = 6
-      return request(app)
-      .get(`/api/users/${user_id}/requests`)
-      .expect(200)
-      .then(({body: {requests}}) => {
-        expect(requests).toEqual([])
-      })
-    })
-    test('GET 200: responds with an array of objects sorted by created_at and ordered by provided order query', () => {
-      const user_id = 1
+      test("GET 200: responds with an empty array when user do not have any pending requests", () => {
+        const user_id = 6;
+        return request(app)
+          .get(`/api/users/${user_id}/requests`)
+          .expect(200)
+          .then(({ body: { requests } }) => {
+            expect(requests).toEqual([]);
+          });
+      });
+    test("GET 200: responds with an array of objects sorted by created_at and ordered by provided order query", () => {
+      const user_id = 1;
       // order: asc, desc
-      const order = "asc"
+      const order = "asc";
       return request(app)
-      .get(`/api/users/${user_id}/requests?order=${order}`)
-      .expect(200)
-      .then(({body: {requests}}) => {
-        expect(requests).toBeSortedBy('created_at', {descending: false})
-      })
-    })
-    test('GET 200: responds with an array of objects filtered by request status', () => {
-      const user_id = 4
-      // status: pending, rejected, accepted
-      const status = "accepted"
-      return request(app)
-      .get(`/api/users/${user_id}/requests?status=${status}`)
-      .expect(200)
-      .then(({body: {requests}}) => {
-        requests.forEach(request => {
-          expect(request.status).toBe(status)
-        })
-      })
-    })
-    test('GET 200: responds with an array of objects filtered by type of request', () => {
-      const user_id = 1
-      // type: received, sent, all
-      const type = "received"
-      // expectIdType: receiver_id, sender_id
-      const expectIdType = 'receiver_id'
-      return request(app)
-      .get(`/api/users/${user_id}/requests?type=${type}`)
-      .expect(200)
-      .then(({body: {requests}}) => {
-        requests.forEach(request => {
-          expect(request[expectIdType]).toBe(user_id)
-        })
-      })
-    })
-    describe('errors: ', () => {
-      test('GET 404:  responds with appropriate error message when passed a valid but non existent id', () => {
-        const user_id = 0
-        return request(app)
-        .get(`/api/users/${user_id}/requests`)
-        .expect(404)
-        .then(({body: {msg}}) => {
-          expect(msg).toBe('User Not Found!')
-        })
-      }),
-      test('GET 400: responds with appropriate error message when given an invalid user id', () => {
-        const user_id = 'invalid_id'
-        return request(app)
-        .get(`/api/users/${user_id}/requests`)
-        .expect(400)
-        .then(({body: {msg}}) => {
-          expect(msg).toBe('Bad Request');
-        })
-      }),
-      test('GET 400: responds with appropriate error message when given an invalid status', () => {
-        const user_id = 1
-        const status = 'invalid_id'
-        return request(app)
-        .get(`/api/users/${user_id}/requests?status=${status}`)
-        .expect(400)
-        .then(({body: {msg}}) => {
-          expect(msg).toBe('Bad Request');
-        })
-      });
-      test('GET 400: responds with appropriate error message when given an invalid type', () => {
-        const user_id = 1
-        const type = 'invalid_id'
-        return request(app)
-        .get(`/api/users/${user_id}/requests?type=${type}`)
-        .expect(400)
-        .then(({body: {msg}}) => {
-          expect(msg).toBe('Bad Request');
-        })
-      });
-      test('GET 400: responds with appropriate error message when given an invalid order', () => {
-        const user_id = 1
-        const order = 'invalid_id'
-        return request(app)
         .get(`/api/users/${user_id}/requests?order=${order}`)
-        .expect(400)
-        .then(({body: {msg}}) => {
-          expect(msg).toBe('Bad Request');
-        })
+        .expect(200)
+        .then(({ body: { requests } }) => {
+          expect(requests).toBeSortedBy("created_at", { descending: false });
+        });
+    });
+    test("GET 200: responds with an array of objects filtered by request status", () => {
+      const user_id = 4;
+      // status: pending, rejected, accepted
+      const status = "accepted";
+      return request(app)
+        .get(`/api/users/${user_id}/requests?status=${status}`)
+        .expect(200)
+        .then(({ body: { requests } }) => {
+          requests.forEach((request) => {
+            expect(request.status).toBe(status);
+          });
+        });
+    });
+    test("GET 200: responds with an array of objects filtered by type of request", () => {
+      const user_id = 1;
+      // type: received, sent, all
+      const type = "received";
+      // expectIdType: receiver_id, sender_id
+      const expectIdType = "receiver_id";
+      return request(app)
+        .get(`/api/users/${user_id}/requests?type=${type}`)
+        .expect(200)
+        .then(({ body: { requests } }) => {
+          requests.forEach((request) => {
+            expect(request[expectIdType]).toBe(user_id);
+          });
+        });
+    });
+    describe("errors: ", () => {
+      test("GET 404:  responds with appropriate error message when passed a valid but non existent id", () => {
+        const user_id = 0;
+        return request(app)
+          .get(`/api/users/${user_id}/requests`)
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("User Not Found!");
+          });
+      }),
+        test("GET 400: responds with appropriate error message when given an invalid user id", () => {
+          const user_id = "invalid_id";
+          return request(app)
+            .get(`/api/users/${user_id}/requests`)
+            .expect(400)
+            .then(({ body: { msg } }) => {
+              expect(msg).toBe("Bad Request");
+            });
+        }),
+        test("GET 400: responds with appropriate error message when given an invalid status", () => {
+          const user_id = 1;
+          const status = "invalid_id";
+          return request(app)
+            .get(`/api/users/${user_id}/requests?status=${status}`)
+            .expect(400)
+            .then(({ body: { msg } }) => {
+              expect(msg).toBe("Bad Request");
+            });
+        });
+      test("GET 400: responds with appropriate error message when given an invalid type", () => {
+        const user_id = 1;
+        const type = "invalid_id";
+        return request(app)
+          .get(`/api/users/${user_id}/requests?type=${type}`)
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("Bad Request");
+          });
+      });
+      test("GET 400: responds with appropriate error message when given an invalid order", () => {
+        const user_id = 1;
+        const order = "invalid_id";
+        return request(app)
+          .get(`/api/users/${user_id}/requests?order=${order}`)
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("Bad Request");
+          });
       });
     })
   })
@@ -264,7 +263,6 @@ describe('/users/:user_id/requests', () => {
       const newRequestBody = {
         sender_id: 2,
         receiver_id: 5,
-        status: 'pending',
         to_ignore: 'ignore me pls'
       }
 
@@ -278,23 +276,23 @@ describe('/users/:user_id/requests', () => {
             sender_id: expect.any(Number),
             receiver_id: expect.any(Number),
             created_at: expect.any(String),
-            status: expect.any(String)
+            status: "pending"
           })
           expect(request).not.toHaveProperty("to_ignore");
         })
     })
-    test("POST 400: returns an error when the request body does not contain all the required values", () => {
+    test("POST 404: returns an error when the receiver_id doesn't exist in the database", () => {
       const newRequestBody = {
         sender_id: 2,
-        receiver_id: 5
+        receiver_id: 0
       }
   
       return request(app)
         .post(`/api/users/${newRequestBody.sender_id}/requests`)
         .send(newRequestBody)
-        .expect(400)
+        .expect(404)
         .then(({body: {msg}}) => {
-          expect(msg).toBe("Bad Request");
+          expect(msg).toBe("User Not Found!");
         });
     });
   })

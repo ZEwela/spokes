@@ -166,7 +166,7 @@ describe("seed", () => {
         });
     });
   });
-  describe("data insertion", () => {
+  describe("user data insertion", () => {
     test("users data has been inserted correctly", () => {
       return db.query(`SELECT * FROM users;`).then(({ rows: users }) => {
         expect(users).toHaveLength(6);
@@ -185,43 +185,6 @@ describe("seed", () => {
           expect(user).toHaveProperty("difficulty");
         });
       });
-    });
-  });
-  describe("data insertion", () => {
-    test("age filters data has been inserted correctly", () => {
-      return db
-        .query(`SELECT DISTINCT age FROM filters WHERE age IS NOT NULL;`)
-        .then(({ rows }) => {
-          expect(rows.length).toBeGreaterThan(0);
-        });
-    });
-
-    test("type filters data has been inserted correctly", () => {
-      return db
-        .query(`SELECT DISTINCT type FROM filters WHERE type IS NOT NULL;`)
-        .then(({ rows }) => {
-          expect(rows.length).toBeGreaterThan(0);
-        });
-    });
-
-    test("difficulty filters data has been inserted correctly", () => {
-      return db
-        .query(
-          `SELECT DISTINCT difficulty FROM filters WHERE difficulty IS NOT NULL;`
-        )
-        .then(({ rows }) => {
-          expect(rows.length).toBeGreaterThan(0);
-        });
-    });
-
-    test("distance filters data has been inserted correctly", () => {
-      return db
-        .query(
-          `SELECT DISTINCT distance FROM filters WHERE distance IS NOT NULL;`
-        )
-        .then(({ rows }) => {
-          expect(rows.length).toBeGreaterThan(0);
-        });
     });
   });
 });

@@ -1,7 +1,7 @@
 exports.putDataInArray = (arrayOfObjs) => {
     let arrayOfData = [];
 
-    arrayOfObjs.forEach(object => {
+    arrayOfObjs.forEach((object) => {
         let thisObjArrToNest = []
         for (let key in object){
             thisObjArrToNest.push(object[key])
