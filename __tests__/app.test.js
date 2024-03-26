@@ -29,53 +29,53 @@ describe("/api", () => {
   });
 });
 
-describe("GET /api/filters", () => {
-  test("GET:200 responds with filters data", () => {
-    return request(app)
-      .get("/api/filters")
-      .expect(200)
-      .then((res) => {});
+describe('/filters', () => {
+  describe("GET /api/filters", () => {
+    test("GET:200 responds with filters data", () => {
+      return request(app)
+        .get("/api/filters")
+        .expect(200)
+        .then((res) => {});
+    });
   });
-});
-
-describe("GET /api/filters/type", () => {
-  test("responds with correct filter type", () => {
-    return request(app)
-      .get("/api/filters/type")
-      .expect(200)
-      .then((res) => {
-        expect(res.body.filters).toHaveLength(3);
-      });
+  describe("GET /api/filters/type", () => {
+    test("responds with correct filter type", () => {
+      return request(app)
+        .get("/api/filters/type")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.filters).toHaveLength(3);
+        });
+    });
+    test("responds with correct filter type", async () => {
+      return request(app)
+        .get("/api/filters/difficulty")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.filters).toHaveLength(4);
+        });
+    });
+    test("responds with correct filter type", async () => {
+      return request(app)
+        .get("/api/filters/age")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.filters).toHaveLength(4);
+        });
+    });
+    test("responds with correct filter type", async () => {
+      return request(app)
+        .get("/api/filters/distance")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.filters).toHaveLength(4);
+        });
+    });
   });
-  test("responds with correct filter type", async () => {
-    return request(app)
-      .get("/api/filters/difficulty")
-      .expect(200)
-      .then((res) => {
-        expect(res.body.filters).toHaveLength(4);
-      });
-  });
-  test("responds with correct filter type", async () => {
-    return request(app)
-      .get("/api/filters/age")
-      .expect(200)
-      .then((res) => {
-        expect(res.body.filters).toHaveLength(4);
-      });
-  });
-  test("responds with correct filter type", async () => {
-    return request(app)
-      .get("/api/filters/distance")
-      .expect(200)
-      .then((res) => {
-        expect(res.body.filters).toHaveLength(4);
-      });
-  });
-});
-
-describe("error test for filter that doesn't exist", () => {
-  test("responds with error message", async () => {
-    return request(app).get("/api/filters/panda").expect(404);
+  describe("error test for filter that doesn't exist", () => {
+    test("responds with error message", async () => {
+      return request(app).get("/api/filters/panda").expect(404);
+    });
   });
 });
 
@@ -143,6 +143,60 @@ describe("/users", () => {
             expect(msg).toBe("User Not Found!");
           });
       });
+    });
+  });
+  describe("POST requests", () => {
+    test("POST 201: creates a new user and responds with the created user", () => {
+      return request(app)
+        .post("/api/users")
+        .send({
+          username: "testuser",
+          email: "testuser@example.com",
+          age: "26 - 39",
+          bio: "Test user bio",
+          region: "Test Region",
+          city: "Test City",
+          type_of_biking: "Road",
+          difficulty: "Intermediate",
+          distance: "Test Distance",
+          avatar_url: "https://example.com/avatar.jpg",
+        })
+        .expect(201)
+        .then(({ body: { user } }) => {
+          expect(user).toMatchObject({
+            username: "testuser",
+            email: "testuser@example.com",
+            age: "26 - 39",
+            bio: "Test user bio",
+            region: "Test Region",
+            city: "Test City",
+            type_of_biking: "Road",
+            difficulty: "Intermediate",
+            distance: "Test Distance",
+            rating: 0,
+            avatar_url: "https://example.com/avatar.jpg",
+          });
+        });
+    });
+    test("POST 400: will error when inputting more than 18 character for username", () => {
+      return request(app)
+        .post("/api/users")
+        .send({
+          username: "testuserlongcharacterstoomany",
+          email: "testuser@example.com",
+          age: "26 - 39",
+          bio: "Test user bio",
+          region: "Test Region",
+          city: "Test City",
+          type_of_biking: "Road",
+          difficulty: "Intermediate",
+          distance: "Test Distance",
+          avatar_url: "https://example.com/avatar.jpg",
+        })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Username must be 18 characters or less");
+        });
     });
   });
 });
@@ -362,63 +416,6 @@ describe("/users/:user_id/rating", () => {
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Bad Request");
       });
-  });
-});
-
-describe("/users", () => {
-  describe("POST requests", () => {
-    test("POST 201: creates a new user and responds with the created user", () => {
-      return request(app)
-        .post("/api/users")
-        .send({
-          username: "testuser",
-          email: "testuser@example.com",
-          age: "26 - 39",
-          bio: "Test user bio",
-          region: "Test Region",
-          city: "Test City",
-          type_of_biking: "Road",
-          difficulty: "Intermediate",
-          distance: "Test Distance",
-          avatar_url: "https://example.com/avatar.jpg",
-        })
-        .expect(201)
-        .then(({ body: { user } }) => {
-          expect(user).toMatchObject({
-            username: "testuser",
-            email: "testuser@example.com",
-            age: "26 - 39",
-            bio: "Test user bio",
-            region: "Test Region",
-            city: "Test City",
-            type_of_biking: "Road",
-            difficulty: "Intermediate",
-            distance: "Test Distance",
-            rating: 0,
-            avatar_url: "https://example.com/avatar.jpg",
-          });
-        });
-    });
-    test("POST 400: will error when inputting more than 18 character for username", () => {
-      return request(app)
-        .post("/api/users")
-        .send({
-          username: "testuserlongcharacterstoomany",
-          email: "testuser@example.com",
-          age: "26 - 39",
-          bio: "Test user bio",
-          region: "Test Region",
-          city: "Test City",
-          type_of_biking: "Road",
-          difficulty: "Intermediate",
-          distance: "Test Distance",
-          avatar_url: "https://example.com/avatar.jpg",
-        })
-        .expect(400)
-        .then(({ body: { msg } }) => {
-          expect(msg).toBe("Username must be 18 characters or less");
-        });
-    });
   });
 });
 
