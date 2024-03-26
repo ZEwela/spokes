@@ -14,4 +14,6 @@ usersRouter.route("/:user_id/rating").patch(patchUserRating)
 
 usersRouter.route("/:user_id/requests").post(postRequestByUserId);
 
+
+
 module.exports = usersRouter

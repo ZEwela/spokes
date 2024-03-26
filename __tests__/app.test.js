@@ -296,6 +296,22 @@ describe("/users/:user_id/requests", () => {
         });
     });
   })
+  describe('PATCH /users/:user_id/requests', () => {
+    test.only('PATCH 200: updates request status', () => {
+      const request_id = 1;
+      const newBody = {
+        status: 'accepted'
+      }
+
+      return request(app)
+      .patch(`/api/requests/${request_id}`)
+      .send(newBody)
+      .expect(200)
+      .then(({body: {request}}) => {
+        expect(request.status).toBe('accepted');
+      })
+    });
+  });
 })
 
 describe('routing errors', () => {
