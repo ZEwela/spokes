@@ -256,17 +256,56 @@ describe("/users/:user_id/requests", () => {
             expect(msg).toBe("Bad Request");
           });
       });
-    });
-  });
-});
+    })
+  })
+  describe('POST /users/:user_id/requests', () => {
+    test('POST 201: returns a new request and ignores unnecessary properties', () => {
+      const newRequestBody = {
+        sender_id: 2,
+        receiver_id: 5,
+        to_ignore: 'ignore me pls'
+      }
 
-describe("routing errors", () => {
-  test("GET 404: responds with appropriate error message", () => {
-    return request(app)
-      .get("/api/not-a-route")
-      .expect(404)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Path not found");
-      });
-  });
-});
+      return request(app)
+        .post(`/api/users/${newRequestBody.sender_id}/requests`)
+        .send(newRequestBody)
+        .expect(201)
+        .then(({body: {request}}) => {
+          expect(request).toMatchObject({
+            request_id: expect.any(Number),
+            sender_id: expect.any(Number),
+            receiver_id: expect.any(Number),
+            created_at: expect.any(String),
+            status: "pending"
+          })
+          expect(request).not.toHaveProperty("to_ignore");
+        })
+    })
+    test("POST 404: returns an error when the receiver_id doesn't exist in the database", () => {
+      const newRequestBody = {
+        sender_id: 2,
+        receiver_id: 0
+      }
+  
+      return request(app)
+        .post(`/api/users/${newRequestBody.sender_id}/requests`)
+        .send(newRequestBody)
+        .expect(404)
+        .then(({body: {msg}}) => {
+          expect(msg).toBe("User Not Found!");
+        });
+    });
+  })
+})
+
+describe('routing errors', () => {
+    test('GET 404: responds with appropriate error message', () => {
+        return request(app)
+        .get('/api/not-a-route')
+        .expect(404)
+        .then(({body: {msg}}) => {
+            expect(msg).toBe('Path not found');
+        })
+    });    
+})
+

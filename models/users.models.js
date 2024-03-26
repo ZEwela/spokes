@@ -9,7 +9,7 @@ exports.selectUsers = () => {
 exports.selectSingleUser = (user_id) => {
     return db.query(`SELECT * FROM users WHERE user_id = $1;`, [user_id]).then(({rows}) => {
         const user = rows[0]
-        
+
         if (!user) {
             return Promise.reject({
                 status: 404,
@@ -75,4 +75,13 @@ exports.selectRequestsByUserId = (user_id, status='pending', order='desc', type=
     return db.query(queryStr, queryValues).then(({rows}) => {
         return rows
     })
+}
+
+exports.insertRequest = ({sender_id, receiver_id}) => {
+    return db.query(`INSERT INTO requests 
+        (sender_id, receiver_id)
+        VALUES ($1, $2)
+        RETURNING *;`, [sender_id, receiver_id])
+    .then(({rows}) =>  { return rows[0] })
+    
 }
