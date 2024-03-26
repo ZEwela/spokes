@@ -156,3 +156,22 @@ describe('routing errors', () => {
       })
   });
 });
+
+describe.only("POST /api/users", () => {
+  test("POST:201 creates a new user", () => {
+    return request(app)
+      .post("/api/users")
+      .send({
+        username: "user_test",
+        email: "test@test.com",
+        password: "password123",
+      })
+      .expect(201)
+      .then((res) => {
+        console.log(res.body.user)
+        expect(res.body.user).toHaveProperty("user_id");
+        expect(res.body.user.username).toBe("user_test");
+        expect(res.body.user.email).toBe("test@test.com");
+      });
+  });
+});

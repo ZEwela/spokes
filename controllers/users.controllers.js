@@ -1,4 +1,4 @@
-const { selectUsers, selectSingleUser } = require("../models/users.models")
+const { selectUsers, selectSingleUser, insertUser } = require("../models/users.models")
 
 exports.getUsers = (req, res, next) => {
     selectUsers().then((users) => {
@@ -15,3 +15,15 @@ exports.getUsersById = (req, res, next) => {
         next(err)
     })
 }
+
+exports.createUser = (req, res, next) => {
+    const { username, email, password } = req.body;
+
+    insertUser(username, email, password)
+        .then(function(newUser) {
+            res.status(201).json({ user: newUser})
+        })
+        .catch(function(error) {
+            next(error)
+        });
+};

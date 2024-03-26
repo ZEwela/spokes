@@ -19,3 +19,11 @@ exports.selectSingleUser = (user_id) => {
         return user;
     })
 }
+
+exports.insertUser = (username, email, password) => {
+    return db.query(
+        `INSERT INTO users (username, email, password) 
+         VALUES ($1, $2, $3) RETURNING *;`,
+         [username, email, password]
+    ).then(({ rows }) => rows[0]);
+};
