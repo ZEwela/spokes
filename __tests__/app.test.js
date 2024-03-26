@@ -547,3 +547,38 @@ describe("/users", () => {
   })
 });
 
+
+describe("/users/:user_id", () => {
+  describe("DELETE requests", () => {
+    test("DELETE 204: deletes the user and returns no content", () => {
+      return request(app)
+        .delete("/api/users/1")
+        .expect(204)
+        .then(() => {
+          return request(app)
+            .get("/api/users/1")
+            .expect(404)
+            .then(({ body: { msg } }) => {
+              expect(msg).toBe("User Not Found!");
+            });
+        });
+    });
+    test("DELETE 404: responds with appropriate error message when the user does not exist", () => {
+      return request(app)
+        .delete("/api/users/999")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("User Not Found!");
+        });
+    });
+    test("DELETE 400: responds with appropriate error message when given an invalid user ID", () => {
+      return request(app)
+        .delete("/api/users/invalid_id")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad Request");
+        });
+    });
+  });
+});
+
