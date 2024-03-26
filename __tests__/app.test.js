@@ -256,139 +256,111 @@ describe("/users/:user_id/requests", () => {
             expect(msg).toBe("Bad Request");
           });
       });
-    })
-  })
-  describe('POST /users/:user_id/requests', () => {
-    test('POST 201: returns a new request and ignores unnecessary properties', () => {
+    });
+  });
+  describe("POST /users/:user_id/requests", () => {
+    test("POST 201: returns a new request and ignores unnecessary properties", () => {
       const newRequestBody = {
         sender_id: 2,
         receiver_id: 5,
-        to_ignore: 'ignore me pls'
-      }
+        to_ignore: "ignore me pls",
+      };
 
       return request(app)
         .post(`/api/users/${newRequestBody.sender_id}/requests`)
         .send(newRequestBody)
         .expect(201)
-        .then(({body: {request}}) => {
+        .then(({ body: { request } }) => {
           expect(request).toMatchObject({
             request_id: expect.any(Number),
             sender_id: expect.any(Number),
             receiver_id: expect.any(Number),
             created_at: expect.any(String),
-            status: "pending"
-          })
+            status: "pending",
+          });
           expect(request).not.toHaveProperty("to_ignore");
-        })
-    })
+        });
+    });
     test("POST 404: returns an error when the receiver_id doesn't exist in the database", () => {
       const newRequestBody = {
         sender_id: 2,
-        receiver_id: 0
-      }
-  
+        receiver_id: 0,
+      };
+
       return request(app)
         .post(`/api/users/${newRequestBody.sender_id}/requests`)
         .send(newRequestBody)
         .expect(404)
-        .then(({body: {msg}}) => {
+        .then(({ body: { msg } }) => {
           expect(msg).toBe("User Not Found!");
         });
     });
-  })
-  describe('DELETE requests', () => {
-    test('DELETE 204: deletes request and responds with status and no content', () => {
-      return request(app).delete("/api/requests/1").expect(204)
-    });
-  });
-})
-
-describe('routing errors', () => {
-    test('GET 404: responds with appropriate error message', () => {
-        return request(app)
-        .get('/api/not-a-route')
-        .expect(404)
-        .then(({body: {msg}}) => {
-            expect(msg).toBe('Path not found');
-        })
-    });    
-})
-
-
-describe('/users/:user_id/rating', () => {
-  test('PATCH 200: responds with correctly updated user rating for a user with 0 ratings', () => {
-    return request(app)
-    .patch("/api/users/2/rating")
-    .send( {new_rating: 3})
-    .expect(200)
-    .then(({body: {user}}) => {
-      expect(user).toMatchObject({
-        user_id: expect.any(Number),
-              username: expect.any(String),
-              email: expect.any(String),
-              age: expect.any(String),
-              bio: expect.any(String),
-              region: expect.any(String),
-              city: expect.any(String),
-              type_of_biking: expect.any(String),
-              difficulty: expect.any(String),
-              distance: expect.any(String),
-              rating: 3,
-              rating_count: 1,
-              avatar_url: expect.any(String)
-      })
-    })
-  });
-  test('PATCH 200: responds with correctly updated user rating for a user with existing ratings', () => {
-    return request(app)
-    .patch("/api/users/1/rating")
-    .send( {new_rating: 2})
-    .expect(200)
-    .then(({body: {user}}) => {
-      expect(user).toMatchObject({
-        user_id: expect.any(Number),
-              username: expect.any(String),
-              email: expect.any(String),
-              age: expect.any(String),
-              bio: expect.any(String),
-              region: expect.any(String),
-              city: expect.any(String),
-              type_of_biking: expect.any(String),
-              difficulty: expect.any(String),
-              distance: expect.any(String),
-              rating: 3,
-              rating_count: 2,
-              avatar_url: expect.any(String)
-      })
-    })
-  });
-  test('PATCH 404: responds with correct status and error message when rating a user that does not exist', () => {
-    return request(app)
-    .patch("/api/users/99999999/rating")
-    .send( {new_rating: 2})
-    .expect(404)
-    .then(({ body: {msg}}) => {
-      expect(msg).toBe("User Not Found!");
-    })
-  });
-  test('PATCH 400: responds with correct status and error message when requesting invalid ID', () => {
-    return request(app)
-        .patch("/api/users/forklift/rating")
-        .send({ new_rating: 1 })
-        .expect(400)
-        .then(({ body: { msg } }) => {
-          expect(msg).toBe("Bad Request");
-        });
   });
 });
 
-describe("routing errors", () => {
-  test("GET 404: responds with appropriate error message", () => {
+describe("/users/:user_id/rating", () => {
+  test("PATCH 200: responds with correctly updated user rating for a user with 0 ratings", () => {
     return request(app)
-      .get("/api/not-a-route")
+      .patch("/api/users/2/rating")
+      .send({ new_rating: 3 })
+      .expect(200)
+      .then(({ body: { user } }) => {
+        expect(user).toMatchObject({
+          user_id: expect.any(Number),
+          username: expect.any(String),
+          email: expect.any(String),
+          age: expect.any(String),
+          bio: expect.any(String),
+          region: expect.any(String),
+          city: expect.any(String),
+          type_of_biking: expect.any(String),
+          difficulty: expect.any(String),
+          distance: expect.any(String),
+          rating: 3,
+          rating_count: 1,
+          avatar_url: expect.any(String),
+        });
+      });
+  });
+  test("PATCH 200: responds with correctly updated user rating for a user with existing ratings", () => {
+    return request(app)
+      .patch("/api/users/1/rating")
+      .send({ new_rating: 2 })
+      .expect(200)
+      .then(({ body: { user } }) => {
+        expect(user).toMatchObject({
+          user_id: expect.any(Number),
+          username: expect.any(String),
+          email: expect.any(String),
+          age: expect.any(String),
+          bio: expect.any(String),
+          region: expect.any(String),
+          city: expect.any(String),
+          type_of_biking: expect.any(String),
+          difficulty: expect.any(String),
+          distance: expect.any(String),
+          rating: 3,
+          rating_count: 2,
+          avatar_url: expect.any(String),
+        });
+      });
+  });
+  test("PATCH 404: responds with correct status and error message when rating a user that does not exist", () => {
+    return request(app)
+      .patch("/api/users/99999999/rating")
+      .send({ new_rating: 2 })
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Path not found");
+        expect(msg).toBe("User Not Found!");
+      });
+  });
+  test("PATCH 400: responds with correct status and error message when requesting invalid ID", () => {
+    return request(app)
+      .patch("/api/users/forklift/rating")
+      .send({ new_rating: 1 })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
       });
   });
 });
@@ -408,7 +380,7 @@ describe("/users", () => {
           type_of_biking: "Road",
           difficulty: "Intermediate",
           distance: "Test Distance",
-          avatar_url: "https://example.com/avatar.jpg"
+          avatar_url: "https://example.com/avatar.jpg",
         })
         .expect(201)
         .then(({ body: { user } }) => {
@@ -423,9 +395,9 @@ describe("/users", () => {
             difficulty: "Intermediate",
             distance: "Test Distance",
             rating: 0,
-            avatar_url: "https://example.com/avatar.jpg"
+            avatar_url: "https://example.com/avatar.jpg",
           });
-        });   
+        });
     });
     test("POST 400: will error when inputting more than 18 character for username", () => {
       return request(app)
@@ -440,12 +412,47 @@ describe("/users", () => {
           type_of_biking: "Road",
           difficulty: "Intermediate",
           distance: "Test Distance",
-          avatar_url: "https://example.com/avatar.jpg"
+          avatar_url: "https://example.com/avatar.jpg",
         })
         .expect(400)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("Username must be 18 characters or less");
-      })
-    })
-  })
+        });
+    });
+  });
+});
+
+describe("/requests", () => {
+  describe("DELETE requests", () => {
+    test("DELETE 204: deletes request and responds with status and no content", () => {
+      return request(app).delete("/api/requests/1").expect(204);
+    });
+    test("DELETE 404: responds with appropriate status and error code for a request ID that does not exist", () => {
+      return request(app)
+        .delete("/api/requests/9999")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Request ID not found");
+        });
+    });
+    test("DELETE 400: responds with appropriate status and error code for invalid request ID", () => {
+      return request(app)
+        .delete("/api/requests/forklift")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad Request");
+        });
+    });
+  });
+});
+
+describe("routing errors", () => {
+  test("GET 404: responds with appropriate error message", () => {
+    return request(app)
+      .get("/api/not-a-route")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Path not found");
+      });
+  });
 });
