@@ -14,3 +14,18 @@ exports.removeRequestByRequestID = (request_id) => {
       }
     });
 };
+
+exports.updateRequestByRequestId = (request_id, status) => {
+  return db.query(
+    `UPDATE requests 
+    SET status = $1 
+    WHERE request_id = $2
+    RETURNING *;`, [status, request_id]
+  )
+  .then(({rows}) => {
+    if(!rows[0]) {
+      return Promise.reject({ status: 404, msg: "Request ID not found"})
+    }
+    return rows[0]
+  })
+}

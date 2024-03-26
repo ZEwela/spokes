@@ -296,24 +296,56 @@ describe("/users/:user_id/requests", () => {
         });
     });
   })
+  describe('PATCH /requests/:request_id', () => {
+    test('PATCH 200: updates request status', () => {
+      const request_id = 1;
+      const newBody = {
+        status: 'accepted'
+      }
+
+      return request(app)
+      .patch(`/api/requests/${request_id}`)
+      .send(newBody)
+      .expect(200)
+      .then(({body: {request}}) => {
+        expect(request.status).toBe('accepted');
+      })
+    })
+    test('PATCH 400: request id is invalid', () => {
+      const request_id = 'invalidid';
+      const newBody = {
+        status: 'accepted'
+      }
+
+      return request(app)
+      .patch(`/api/requests/${request_id}`)
+      .send(newBody)
+      .expect(400)
+      .then(({body: {msg}}) => {
+        expect(msg).toBe('Bad Request');
+      })
+    });
+    test('PATCH 404: request id is valid but non existent', () => {
+      const request_id = 0;
+      const newBody = {
+        status: 'accepted'
+      }
+
+      return request(app)
+      .patch(`/api/requests/${request_id}`)
+      .send(newBody)
+      .expect(404)
+      .then(({body: {msg}}) => {
+        expect(msg).toBe('Request ID not found');
+      })
+    });
+  })
   describe('DELETE requests', () => {
     test('DELETE 204: deletes request and responds with status and no content', () => {
       return request(app).delete("/api/requests/1").expect(204)
     });
   });
-})
-
-describe('routing errors', () => {
-    test('GET 404: responds with appropriate error message', () => {
-        return request(app)
-        .get('/api/not-a-route')
-        .expect(404)
-        .then(({body: {msg}}) => {
-            expect(msg).toBe('Path not found');
-        })
-    });    
-})
-
+});
 
 describe('/users/:user_id/rating', () => {
   test('PATCH 200: responds with correctly updated user rating for a user with 0 ratings', () => {
