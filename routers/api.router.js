@@ -1,19 +1,14 @@
-const {
-  getEndpoints,
-  getFilters,
-  getFilterTypes,
-} = require("../controllers/api.controllers");
+const { getEndpoints } = require("../controllers/api.controllers");
+const filtersRouter = require("./filters.router");
 const requestsRouter = require("./requests.router");
-
 const usersRouter = require("./users.router");
 
 const apiRouter = require("express").Router();
 
 apiRouter.get("/", getEndpoints);
-apiRouter.get("/filters", getFilters);
-apiRouter.get("/filters/:type", getFilterTypes);
 
 apiRouter.use("/users", usersRouter);
-apiRouter.use("/requests", requestsRouter)
+apiRouter.use("/requests", requestsRouter);
+apiRouter.use("/filters", filtersRouter);
 
 module.exports = apiRouter;

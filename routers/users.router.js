@@ -6,7 +6,6 @@ const {
   postRequestByUserId,
   createUser,
   patchUserRating,
-  deleteRequestByUseID,
   deleteUser,
 } = require("../controllers/users.controllers");
 
