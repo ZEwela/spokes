@@ -1,4 +1,4 @@
-const { selectUsers, selectSingleUser } = require("../models/users.models")
+const { selectUsers, selectSingleUser, selectRequestsByUserId } = require("../models/users.models")
 
 exports.getUsers = (req, res, next) => {
     selectUsers().then((users) => {
@@ -10,6 +10,19 @@ exports.getUsersById = (req, res, next) => {
     const{ user_id }= req.params;
     selectSingleUser(user_id).then((user) => {
         res.status(200).send({user})
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
+
+exports.getRequestsByUserId = (req, res, next) => {
+    const { user_id } = req.params;
+    const { status, order, type } = req.query;
+
+    const promises = [selectSingleUser(user_id), selectRequestsByUserId(user_id, status, order, type)]
+    Promise.all(promises).then((resolvePromises) => {
+        res.status(200).send({requests: resolvePromises[1]})
     })
     .catch((err) => {
         next(err)

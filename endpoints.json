@@ -52,5 +52,34 @@
         }
       }
     }
+  },
+  "/users/:user_id/requests": {
+    "GET /users/:user_id/requests": {
+      "description": "serves an array of users and request details. By default, it includes all pending requests associated with the provided user_id, sorted by request creation time in descending order",
+      "queries": ["order", "status", "type"],
+      "exampleResponse": {
+        "requests": [
+          {
+            "user_id": 3,
+            "username": "wilko987123",
+            "email": "emily.johnson@example.com",
+            "age": "18 - 25",
+            "bio": "Casual cyclist who enjoys leisurely rides on weekends.",
+            "region": "West Midlands",
+            "city": "Birmingham",
+            "type_of_biking": "Park",
+            "difficulty": "Beginner",
+            "distance": "50 km - 75 km",
+            "rating": 3,
+            "avatar_url": "https://images.unsplash.com/photo-1606914707708-5180546f153d?q=80&w=1376&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "request_id": 4,
+            "sender_id": 3,
+            "receiver_id": 1,
+            "created_at": "2020-02-23T12:01:00.000Z",
+            "status": "pending"
+          } 
+        ]
+      } 
+    }
   }
 }
