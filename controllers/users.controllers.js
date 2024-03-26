@@ -1,5 +1,4 @@
-
-const { selectUsers, selectSingleUser, selectRequestsByUserId, insertRequest, insertUser, updateUserRating } = require("../models/users.models")
+const { selectUsers, selectSingleUser, selectRequestsByUserId, insertRequest, insertUser, updateUserRating ,updateUser, deleteUserById} = require("../models/users.models")
 
 exports.getUsers = (req, res, next) => {
   selectUsers().then((users) => {
@@ -33,6 +32,22 @@ exports.getRequestsByUserId = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+};
+
+
+exports.updateUserById = async (req, res, next) => {
+  const { user_id } = req.params;
+  const updateData = req.body;
+
+  try {
+    const updatedUser = await updateUser(user_id, updateData);
+    if (!updatedUser) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    res.status(200).send({ user: updatedUser });
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.patchUserRating = (req, res, next) => {
@@ -91,3 +106,14 @@ exports.postRequestByUserId = (req, res, next) => {
       next(err);
     });
 }
+
+exports.deleteUser = (req, res, next) => {
+    const { user_id } = req.params;
+    deleteUserById(user_id)
+      .then(() => {
+        res.status(204).end();
+      })
+      .catch((err) => {
+        next(err);
+      });
+};
