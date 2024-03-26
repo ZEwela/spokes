@@ -296,6 +296,11 @@ describe("/users/:user_id/requests", () => {
         });
     });
   })
+  describe('DELETE requests', () => {
+    test('DELETE 204: deletes request and responds with status and no content', () => {
+      return request(app).delete("/api/requests/1").expect(204)
+    });
+  });
 })
 
 describe('routing errors', () => {
