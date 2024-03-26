@@ -393,6 +393,71 @@ describe("routing errors", () => {
   });
 });
 
+
+describe("PATCH /api/users/:user_id", () => {
+  test("200: successfully updates the user and responds with the updated user data", async () => {
+    const updateData = {
+      username: "jonnyDough92",
+      email: "yampreek@gmail.com",
+      age: "18 - 25",
+      bio: "New Bio.",
+      region: "North West",
+      city: "Manchester",
+      type_of_biking: "Mountain",
+      difficulty: "Expert",
+      distance: "75 km and above",
+      avatar_url:
+        "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    };
+
+    const response = await request(app).patch("/api/users/1").send(updateData);
+    expect(response.statusCode).toBe(200);
+    expect(response.body.user).toMatchObject(updateData);
+  });
+  test("404: returns an error when trying to update a non-existent user", async () => {
+    const UserId = 9999;
+    const updateData = {
+      username: "jonnyDough92",
+      email: "yampreek@gmail.com",
+      age: "18 - 25",
+      bio: "New Updated.",
+      region: "North West",
+      city: "Manchester",
+      type_of_biking: "Mountain",
+      difficulty: "Expert",
+      distance: "75 km and above",
+      avatar_url:
+        "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    };
+
+    const response = await request(app)
+      .patch(`/api/users/${UserId}`)
+      .send(updateData);
+    expect(response.statusCode).toBe(404);
+    expect(response.body.msg).toBe("User Not Found!");
+  });
+  test("400: returns an error when given invalid data (missing data)", async () => {
+    const UserId = "a";
+    const updateData = {
+      username: "jonnyDough92",
+      email: "yampreek@gmail.com",
+      age: "18 - 25",
+      bio: "New Updated.",
+      region: "North West",
+      city: "Manchester",
+      type_of_biking: "Mountain",
+      difficulty: "Expert",
+      distance: "75 km and above",
+    };
+
+    const response = await request(app)
+      .patch(`/api/users/${UserId}`)
+      .send(updateData);
+    expect(response.statusCode).toBe(400);
+    expect(response.body.msg).toBe("Bad Request");
+  });
+});
+
 describe("/users", () => {
   describe("POST requests", () => {
     test("POST 201: creates a new user and responds with the created user", () => {
@@ -449,3 +514,4 @@ describe("/users", () => {
     })
   })
 });
+

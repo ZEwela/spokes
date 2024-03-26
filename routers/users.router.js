@@ -2,6 +2,7 @@ const {
   getUsers,
   getUsersById,
   getRequestsByUserId,
+  updateUserById,
   postRequestByUserId,
   createUser,
   patchUserRating,
@@ -12,7 +13,7 @@ const usersRouter = require("express").Router();
 
 usersRouter.route("/").get(getUsers).post(createUser);
 
-usersRouter.route("/:user_id").get(getUsersById);
+usersRouter.route("/:user_id").get(getUsersById).patch(updateUserById);
 
 usersRouter
   .route("/:user_id/requests")
