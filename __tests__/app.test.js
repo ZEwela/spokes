@@ -363,7 +363,6 @@ describe('/users/:user_id/rating', () => {
     .send( {new_rating: 2})
     .expect(404)
     .then(({ body: {msg}}) => {
-      console.log(msg);
       expect(msg).toBe("User Not Found!");
     })
   });
