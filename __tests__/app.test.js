@@ -256,9 +256,59 @@ describe("/users/:user_id/requests", () => {
             expect(msg).toBe("Bad Request");
           });
       });
+    })
+  })
+  describe('POST /users/:user_id/requests', () => {
+    test('POST 201: returns a new request and ignores unnecessary properties', () => {
+      const newRequestBody = {
+        sender_id: 2,
+        receiver_id: 5,
+        to_ignore: 'ignore me pls'
+      }
+
+      return request(app)
+        .post(`/api/users/${newRequestBody.sender_id}/requests`)
+        .send(newRequestBody)
+        .expect(201)
+        .then(({body: {request}}) => {
+          expect(request).toMatchObject({
+            request_id: expect.any(Number),
+            sender_id: expect.any(Number),
+            receiver_id: expect.any(Number),
+            created_at: expect.any(String),
+            status: "pending"
+          })
+          expect(request).not.toHaveProperty("to_ignore");
+        })
+    })
+    test("POST 404: returns an error when the receiver_id doesn't exist in the database", () => {
+      const newRequestBody = {
+        sender_id: 2,
+        receiver_id: 0
+      }
+  
+      return request(app)
+        .post(`/api/users/${newRequestBody.sender_id}/requests`)
+        .send(newRequestBody)
+        .expect(404)
+        .then(({body: {msg}}) => {
+          expect(msg).toBe("User Not Found!");
+        });
     });
-  });
-});
+  })
+})
+
+describe('routing errors', () => {
+    test('GET 404: responds with appropriate error message', () => {
+        return request(app)
+        .get('/api/not-a-route')
+        .expect(404)
+        .then(({body: {msg}}) => {
+            expect(msg).toBe('Path not found');
+        })
+    });    
+})
+
 
 describe('/users/:user_id/rating', () => {
   test('PATCH 200: responds with correctly updated user rating for a user with 0 ratings', () => {
@@ -337,4 +387,61 @@ describe("routing errors", () => {
         expect(msg).toBe("Path not found");
       });
   });
+});
+
+describe("/users", () => {
+  describe("POST requests", () => {
+    test("POST 201: creates a new user and responds with the created user", () => {
+      return request(app)
+        .post("/api/users")
+        .send({
+          username: "testuser",
+          email: "testuser@example.com",
+          age: "26 - 39",
+          bio: "Test user bio",
+          region: "Test Region",
+          city: "Test City",
+          type_of_biking: "Road",
+          difficulty: "Intermediate",
+          distance: "Test Distance",
+          avatar_url: "https://example.com/avatar.jpg"
+        })
+        .expect(201)
+        .then(({ body: { user } }) => {
+          expect(user).toMatchObject({
+            username: "testuser",
+            email: "testuser@example.com",
+            age: "26 - 39",
+            bio: "Test user bio",
+            region: "Test Region",
+            city: "Test City",
+            type_of_biking: "Road",
+            difficulty: "Intermediate",
+            distance: "Test Distance",
+            rating: 0,
+            avatar_url: "https://example.com/avatar.jpg"
+          });
+        });   
+    });
+    test("POST 400: will error when inputting more than 18 character for username", () => {
+      return request(app)
+        .post("/api/users")
+        .send({
+          username: "testuserlongcharacterstoomany",
+          email: "testuser@example.com",
+          age: "26 - 39",
+          bio: "Test user bio",
+          region: "Test Region",
+          city: "Test City",
+          type_of_biking: "Road",
+          difficulty: "Intermediate",
+          distance: "Test Distance",
+          avatar_url: "https://example.com/avatar.jpg"
+        })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Username must be 18 characters or less");
+      })
+    })
+  })
 });

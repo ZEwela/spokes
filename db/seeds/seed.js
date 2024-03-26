@@ -83,7 +83,7 @@ function createRequests() {
     sender_id INT REFERENCES users(user_id) NOT NULL,
     receiver_id INT REFERENCES users(user_id) NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
-    status VARCHAR NOT NULL
+    status VARCHAR DEFAULT 'pending'
     );`);
 }
 
@@ -99,36 +99,36 @@ function insertRequestsData(requestsToInsert) {
     return db.query(requestsInsertStr)
 }
 
-function insertAgeFilters(filters) {
-  const insertStr = format(
-    `INSERT INTO filters (age) VALUES %L RETURNING *;`,
-    filters.map((filter) => [filter.age])
-  );
-  return db.query(insertStr);
-}
+// function insertAgeFilters(filters) {
+//   const insertStr = format(
+//     `INSERT INTO filters (age) VALUES %L RETURNING *;`,
+//     filters.map((filter) => [filter.age])
+//   );
+//   return db.query(insertStr);
+// }
 
-function insertDifficultyFilters(filters) {
-  const insertStr = format(
-    `INSERT INTO filters (difficulty) VALUES %L RETURNING *;`,
-    filters.map((filter) => [filter.difficulty])
-  );
-  return db.query(insertStr);
-}
+// function insertDifficultyFilters(filters) {
+//   const insertStr = format(
+//     `INSERT INTO filters (difficulty) VALUES %L RETURNING *;`,
+//     filters.map((filter) => [filter.difficulty])
+//   );
+//   return db.query(insertStr);
+// }
 
-function insertDistanceFilters(filters) {
-  const insertStr = format(
-    `INSERT INTO filters (distance) VALUES %L RETURNING *;`,
-    filters.map((filter) => [filter.distance])
-  );
-  return db.query(insertStr);
-}
+// function insertDistanceFilters(filters) {
+//   const insertStr = format(
+//     `INSERT INTO filters (distance) VALUES %L RETURNING *;`,
+//     filters.map((filter) => [filter.distance])
+//   );
+//   return db.query(insertStr);
+// }
 
-function insertTypeFilters(filters) {
-  const insertStr = format(
-    `INSERT INTO filters (type) VALUES %L RETURNING *;`,
-    filters.map((filter) => [filter.type])
-  );
-  return db.query(insertStr);
-}
+// function insertTypeFilters(filters) {
+//   const insertStr = format(
+//     `INSERT INTO filters (type) VALUES %L RETURNING *;`,
+//     filters.map((filter) => [filter.type])
+//   );
+//   return db.query(insertStr);
+// }
 
 module.exports = seed;

@@ -9,7 +9,7 @@ exports.selectUsers = () => {
 exports.selectSingleUser = (user_id) => {
     return db.query(`SELECT * FROM users WHERE user_id = $1;`, [user_id]).then(({rows}) => {
         const user = rows[0]
-        
+
         if (!user) {
             return Promise.reject({
                 status: 404,
@@ -77,6 +77,7 @@ exports.selectRequestsByUserId = (user_id, status='pending', order='desc', type=
     })
 }
 
+
 exports.updateUserRating = (updatedRating, user_id) => {
     return db.query(
         `UPDATE users
@@ -91,3 +92,26 @@ exports.updateUserRating = (updatedRating, user_id) => {
         return rows[0];
     })
 }
+
+
+exports.insertUser = (user) => {
+    const { username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, avatar_url } = user;
+
+    return db.query(
+        `INSERT INTO users (username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, avatar_url)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+         RETURNING *;`,
+        [username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, avatar_url]
+    )
+    .then(result => result.rows[0]);
+};
+
+exports.insertRequest = ({sender_id, receiver_id}) => {
+    return db.query(`INSERT INTO requests 
+        (sender_id, receiver_id)
+        VALUES ($1, $2)
+        RETURNING *;`, [sender_id, receiver_id])
+    .then(({rows}) =>  { return rows[0] })
+    
+}
+
