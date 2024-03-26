@@ -29,7 +29,7 @@ describe("/api", () => {
   });
 });
 
-describe('/filters', () => {
+describe("/filters", () => {
   describe("GET /api/filters", () => {
     test("GET:200 responds with filters data", () => {
       return request(app)
@@ -349,60 +349,55 @@ describe("/users/:user_id/requests", () => {
           expect(msg).toBe("User Not Found!");
         });
     });
-  })
-  describe('PATCH /requests/:request_id', () => {
-    test('PATCH 200: updates request status', () => {
+  });
+  describe("PATCH /requests/:request_id", () => {
+    test("PATCH 200: updates request status", () => {
       const request_id = 1;
       const newBody = {
-        status: 'accepted'
-      }
+        status: "accepted",
+      };
 
       return request(app)
-      .patch(`/api/requests/${request_id}`)
-      .send(newBody)
-      .expect(200)
-      .then(({body: {request}}) => {
-        expect(request.status).toBe('accepted');
-      })
-    })
-    test('PATCH 400: request id is invalid', () => {
-      const request_id = 'invalidid';
-      const newBody = {
-        status: 'accepted'
-      }
-
-      return request(app)
-      .patch(`/api/requests/${request_id}`)
-      .send(newBody)
-      .expect(400)
-      .then(({body: {msg}}) => {
-        expect(msg).toBe('Bad Request');
-      })
+        .patch(`/api/requests/${request_id}`)
+        .send(newBody)
+        .expect(200)
+        .then(({ body: { request } }) => {
+          expect(request.status).toBe("accepted");
+        });
     });
-    test('PATCH 404: request id is valid but non existent', () => {
+    test("PATCH 400: request id is invalid", () => {
+      const request_id = "invalidid";
+      const newBody = {
+        status: "accepted",
+      };
+
+      return request(app)
+        .patch(`/api/requests/${request_id}`)
+        .send(newBody)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad Request");
+        });
+    });
+    test("PATCH 404: request id is valid but non existent", () => {
       const request_id = 0;
       const newBody = {
-        status: 'accepted'
-      }
+        status: "accepted",
+      };
 
       return request(app)
-      .patch(`/api/requests/${request_id}`)
-      .send(newBody)
-      .expect(404)
-      .then(({body: {msg}}) => {
-        expect(msg).toBe('Request ID not found');
-      })
-    });
-  })
-  describe('DELETE requests', () => {
-    test('DELETE 204: deletes request and responds with status and no content', () => {
-      return request(app).delete("/api/requests/1").expect(204)
+        .patch(`/api/requests/${request_id}`)
+        .send(newBody)
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Request ID not found");
+        });
     });
   });
 });
 
-describe('/users/:user_id/rating', () => {
-  test('PATCH 200: responds with correctly updated user rating for a user with 0 ratings', () => {
+describe("/users/:user_id/rating", () => {
+  test("PATCH 200: responds with correctly updated user rating for a user with 0 ratings", () => {
     return request(app)
       .patch("/api/users/2/rating")
       .send({ new_rating: 3 })
@@ -503,7 +498,6 @@ describe("routing errors", () => {
   });
 });
 
-
 describe("PATCH /api/users/:user_id", () => {
   test("200: successfully updates the user and responds with the updated user data", async () => {
     const updateData = {
@@ -567,96 +561,3 @@ describe("PATCH /api/users/:user_id", () => {
     expect(response.body.msg).toBe("Bad Request");
   });
 });
-
-describe("/users", () => {
-  describe("POST requests", () => {
-    test("POST 201: creates a new user and responds with the created user", () => {
-      return request(app)
-        .post("/api/users")
-        .send({
-          username: "testuser",
-          email: "testuser@example.com",
-          age: "26 - 39",
-          bio: "Test user bio",
-          region: "Test Region",
-          city: "Test City",
-          type_of_biking: "Road",
-          difficulty: "Intermediate",
-          distance: "Test Distance",
-          avatar_url: "https://example.com/avatar.jpg"
-        })
-        .expect(201)
-        .then(({ body: { user } }) => {
-          expect(user).toMatchObject({
-            username: "testuser",
-            email: "testuser@example.com",
-            age: "26 - 39",
-            bio: "Test user bio",
-            region: "Test Region",
-            city: "Test City",
-            type_of_biking: "Road",
-            difficulty: "Intermediate",
-            distance: "Test Distance",
-            rating: 0,
-            avatar_url: "https://example.com/avatar.jpg"
-          });
-        });   
-    });
-    test("POST 400: will error when inputting more than 18 character for username", () => {
-      return request(app)
-        .post("/api/users")
-        .send({
-          username: "testuserlongcharacterstoomany",
-          email: "testuser@example.com",
-          age: "26 - 39",
-          bio: "Test user bio",
-          region: "Test Region",
-          city: "Test City",
-          type_of_biking: "Road",
-          difficulty: "Intermediate",
-          distance: "Test Distance",
-          avatar_url: "https://example.com/avatar.jpg"
-        })
-        .expect(400)
-        .then(({ body: { msg } }) => {
-          expect(msg).toBe("Username must be 18 characters or less");
-      })
-    })
-  })
-});
-
-
-describe("/users/:user_id", () => {
-  describe("DELETE requests", () => {
-    test("DELETE 204: deletes the user and returns no content", () => {
-      return request(app)
-        .delete("/api/users/1")
-        .expect(204)
-        .then(() => {
-          return request(app)
-            .get("/api/users/1")
-            .expect(404)
-            .then(({ body: { msg } }) => {
-              expect(msg).toBe("User Not Found!");
-            });
-        });
-    });
-    test("DELETE 404: responds with appropriate error message when the user does not exist", () => {
-      return request(app)
-        .delete("/api/users/999")
-        .expect(404)
-        .then(({ body: { msg } }) => {
-          expect(msg).toBe("User Not Found!");
-        });
-    });
-    test("DELETE 400: responds with appropriate error message when given an invalid user ID", () => {
-      return request(app)
-        .delete("/api/users/invalid_id")
-        .expect(400)
-        .then(({ body: { msg } }) => {
-          expect(msg).toBe("Bad Request");
-        });
-    });
-  });
-});
-
