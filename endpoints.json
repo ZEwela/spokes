@@ -80,6 +80,24 @@
           } 
         ]
       } 
+    },
+    "POST /users/:user_id/requests": {
+      "description": "serves a new request",
+      "queries": [],
+      "body": {
+        "sender_id": 2,
+        "receiver_id": 5
+      },
+      "exampleResponse": {
+        "request": 
+          {
+            "request_id": 4,
+            "sender_id": 2,
+            "receiver_id": 5,
+            "created_at": "2020-02-23T12:01:00.000Z",
+            "status": "pending"
+          } 
+      } 
     }
   }
 }

@@ -1,4 +1,5 @@
-const { selectUsers, selectSingleUser, selectRequestsByUserId, insertUser } = require("../models/users.models")
+const { selectUsers, selectSingleUser, selectRequestsByUserId, insertRequest, insertUser } = require("../models/users.models")
+
 
 exports.getUsers = (req, res, next) => {
     selectUsers().then((users) => {
@@ -29,6 +30,7 @@ exports.getRequestsByUserId = (req, res, next) => {
     })
 }
 
+
 exports.createUser = (req, res, next) => {
     const newUser = {
         username: req.body.username,
@@ -52,3 +54,17 @@ exports.createUser = (req, res, next) => {
     })
     .catch(next);
 };
+
+exports.postRequestByUserId = (req, res, next) => {
+    const body = req.body;
+
+    const promises = [selectSingleUser(body.receiver_id), insertRequest(body)]
+    
+    Promise.all(promises)
+    .then((promisesResolution) => {
+      res.status(201).send({ request: promisesResolution[1] });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
