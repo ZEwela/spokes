@@ -7,12 +7,29 @@ exports.selectUsers = () => {
 };
 
 exports.selectSingleUser = (user_id) => {
-  return db
-    .query(`SELECT * FROM users WHERE user_id = $1;`, [user_id])
-    .then(({ rows }) => {
-      const user = rows[0];
+    return db.query(`SELECT * FROM users WHERE user_id = $1;`, [user_id]).then(({rows}) => {
+        const user = rows[0]
 
-      if (!user) {
+        if (!user) {
+            return Promise.reject({
+                status: 404,
+                msg: 'User Not Found!'
+            })
+        }
+        return user;
+    })
+}
+
+exports.selectRequestsByUserId = (user_id, status='pending', order='desc', type="all") => {
+
+    const statusLookUp = ['accepted', 'rejected', 'pending'];
+    const orderLookUp = ['asc', 'desc'];
+    const typeLookUp = ['all', 'received', 'sent'];
+
+    const queryValues = [user_id]
+
+    if (!typeLookUp.includes(type) || !statusLookUp.includes(status) || !orderLookUp.includes(order)) {
+
         return Promise.reject({
           status: 404,
           msg: "User Not Found!",
@@ -155,3 +172,40 @@ exports.updateUser = async (userId, updateData) => {
     throw error;
   }
 };
+
+exports.updateUserRating = (updatedRating, user_id) => {
+    return db.query(
+        `UPDATE users
+        SET
+        rating = $1,
+        rating_count = rating_count + 1
+        WHERE user_id = $2
+        RETURNING *;`,
+        [updatedRating, user_id]
+    )
+    .then(({rows}) => {
+        return rows[0];
+    })
+}
+
+
+exports.insertUser = (user) => {
+    const { username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, avatar_url } = user;
+
+    return db.query(
+        `INSERT INTO users (username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, avatar_url)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+         RETURNING *;`,
+        [username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, avatar_url]
+    )
+    .then(result => result.rows[0]);
+};
+
+exports.insertRequest = ({sender_id, receiver_id}) => {
+    return db.query(`INSERT INTO requests 
+        (sender_id, receiver_id)
+        VALUES ($1, $2)
+        RETURNING *;`, [sender_id, receiver_id])
+    .then(({rows}) =>  { return rows[0] })
+    
+}
