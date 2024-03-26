@@ -53,8 +53,6 @@ exports.patchUserRating = (req, res, next) => {
     .catch(next);
 };
 
-}
-
 
 exports.createUser = (req, res, next) => {
     const newUser = {
