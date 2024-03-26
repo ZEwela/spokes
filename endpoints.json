@@ -53,7 +53,7 @@
       }
     }
   },
-  "/users/:user_id/requests": {
+  "/api/users/:user_id/requests": {
     "GET /users/:user_id/requests": {
       "description": "serves an array of users and request details. By default, it includes all pending requests associated with the provided user_id, sorted by request creation time in descending order",
       "queries": ["order", "status", "type"],
@@ -96,6 +96,25 @@
             "receiver_id": 5,
             "created_at": "2020-02-23T12:01:00.000Z",
             "status": "pending"
+          } 
+      } 
+    }
+  },
+  "/api/requests/:request_id": {
+    "PATCH /api/requests/:request_id": {
+      "description": "updates request status",
+      "queries": [],
+      "body": {
+        "status": "accepted"
+      },
+      "exampleResponse": {
+        "request": 
+          {
+            "request_id": 4,
+            "sender_id": 2,
+            "receiver_id": 5,
+            "created_at": "2020-02-23T12:01:00.000Z",
+            "status": "accepted"
           } 
       } 
     }
