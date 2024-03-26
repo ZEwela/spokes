@@ -1,6 +1,6 @@
 const db = require("../connection");
 const format = require("pg-format");
-const { putDataInArray } = require("./utils");
+const { putDataInArray, convertTimestampToDate } = require("./utils");
 
 function seed({
   userData,
@@ -17,7 +17,7 @@ function seed({
     type: typeFilters.map((filter) => filter.type),
   });
 
-db.query("DROP TABLE IF EXISTS requests;")
+return db.query("DROP TABLE IF EXISTS requests;")
   .then(() => db.query("DROP TABLE IF EXISTS users;"))
   .then(() => db.query("DROP TABLE IF EXISTS filters;"))
   .then(() => createUsers())
@@ -87,14 +87,47 @@ function createRequests() {
 }
 
 function insertRequestsData(requestsToInsert) {
-  const requestsInsertStr = format(
-    `INSERT INTO requests
-        (sender_id, receiver_id, status) 
+  const formattedRequestsData = requestsToInsert.map(convertTimestampToDate);
+    const requestsInsertStr = format(
+        `INSERT INTO requests
+        (sender_id, receiver_id, status, created_at) 
         VALUES %L
-        RETURNING *;`,
-    putDataInArray(requestsToInsert)
+        RETURNING *;`, 
+        putDataInArray(formattedRequestsData)
+        )
+    return db.query(requestsInsertStr)
+}
+
+function insertAgeFilters(filters) {
+  const insertStr = format(
+    `INSERT INTO filters (age) VALUES %L RETURNING *;`,
+    filters.map((filter) => [filter.age])
   );
-  return db.query(requestsInsertStr);
+  return db.query(insertStr);
+}
+
+function insertDifficultyFilters(filters) {
+  const insertStr = format(
+    `INSERT INTO filters (difficulty) VALUES %L RETURNING *;`,
+    filters.map((filter) => [filter.difficulty])
+  );
+  return db.query(insertStr);
+}
+
+function insertDistanceFilters(filters) {
+  const insertStr = format(
+    `INSERT INTO filters (distance) VALUES %L RETURNING *;`,
+    filters.map((filter) => [filter.distance])
+  );
+  return db.query(insertStr);
+}
+
+function insertTypeFilters(filters) {
+  const insertStr = format(
+    `INSERT INTO filters (type) VALUES %L RETURNING *;`,
+    filters.map((filter) => [filter.type])
+  );
+  return db.query(insertStr);
 }
 
 module.exports = seed;

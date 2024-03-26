@@ -3,6 +3,7 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const request = require("supertest");
 const app = require("../app");
+require("jest-sorted");
 
 beforeAll(() => seed(data));
 afterAll(() => db.end());
@@ -38,7 +39,7 @@ describe("GET /api/filters", () => {
 });
 
 describe("GET /api/filters/type", () => {
-  test("responds with correct filter type", async () => {
+  test("responds with correct filter type", () => {
     return request(app)
       .get("/api/filters/type")
       .expect(200)
@@ -146,32 +147,183 @@ describe("/users", () => {
   });
 });
 
-describe('routing errors', () => {
-  test('GET 404: responds with appropriate error message', () => {
+describe("/users/:user_id/requests", () => {
+  describe("GET requests", () => {
+    test("GET 200: responds with an array of users and request details. By default, it includes all pending requests associated with the provided user_id, sorted by request creation time in descending order", () => {
+      const user_id = 1;
       return request(app)
-      .get('/api/not-a-route')
-      .expect(404)
-      .then(({body: {msg}}) => {
-          expect(msg).toBe('Path not found');
-      })
+        .get(`/api/users/${user_id}/requests`)
+        .expect(200)
+        .then(({ body: { requests } }) => {
+          expect(requests).toHaveLength(2);
+          expect(requests).toBeSortedBy("created_at", { descending: true });
+        });
+    }),
+      test("GET 200: responds with an empty array when user do not have any pending requests", () => {
+        const user_id = 6;
+        return request(app)
+          .get(`/api/users/${user_id}/requests`)
+          .expect(200)
+          .then(({ body: { requests } }) => {
+            expect(requests).toEqual([]);
+          });
+      });
+    test("GET 200: responds with an array of objects sorted by created_at and ordered by provided order query", () => {
+      const user_id = 1;
+      // order: asc, desc
+      const order = "asc";
+      return request(app)
+        .get(`/api/users/${user_id}/requests?order=${order}`)
+        .expect(200)
+        .then(({ body: { requests } }) => {
+          expect(requests).toBeSortedBy("created_at", { descending: false });
+        });
+    });
+    test("GET 200: responds with an array of objects filtered by request status", () => {
+      const user_id = 4;
+      // status: pending, rejected, accepted
+      const status = "accepted";
+      return request(app)
+        .get(`/api/users/${user_id}/requests?status=${status}`)
+        .expect(200)
+        .then(({ body: { requests } }) => {
+          requests.forEach((request) => {
+            expect(request.status).toBe(status);
+          });
+        });
+    });
+    test("GET 200: responds with an array of objects filtered by type of request", () => {
+      const user_id = 1;
+      // type: received, sent, all
+      const type = "received";
+      // expectIdType: receiver_id, sender_id
+      const expectIdType = "receiver_id";
+      return request(app)
+        .get(`/api/users/${user_id}/requests?type=${type}`)
+        .expect(200)
+        .then(({ body: { requests } }) => {
+          requests.forEach((request) => {
+            expect(request[expectIdType]).toBe(user_id);
+          });
+        });
+    });
+    describe("errors: ", () => {
+      test("GET 404:  responds with appropriate error message when passed a valid but non existent id", () => {
+        const user_id = 0;
+        return request(app)
+          .get(`/api/users/${user_id}/requests`)
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("User Not Found!");
+          });
+      }),
+        test("GET 400: responds with appropriate error message when given an invalid user id", () => {
+          const user_id = "invalid_id";
+          return request(app)
+            .get(`/api/users/${user_id}/requests`)
+            .expect(400)
+            .then(({ body: { msg } }) => {
+              expect(msg).toBe("Bad Request");
+            });
+        }),
+        test("GET 400: responds with appropriate error message when given an invalid status", () => {
+          const user_id = 1;
+          const status = "invalid_id";
+          return request(app)
+            .get(`/api/users/${user_id}/requests?status=${status}`)
+            .expect(400)
+            .then(({ body: { msg } }) => {
+              expect(msg).toBe("Bad Request");
+            });
+        });
+      test("GET 400: responds with appropriate error message when given an invalid type", () => {
+        const user_id = 1;
+        const type = "invalid_id";
+        return request(app)
+          .get(`/api/users/${user_id}/requests?type=${type}`)
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("Bad Request");
+          });
+      });
+      test("GET 400: responds with appropriate error message when given an invalid order", () => {
+        const user_id = 1;
+        const order = "invalid_id";
+        return request(app)
+          .get(`/api/users/${user_id}/requests?order=${order}`)
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("Bad Request");
+          });
+      });
+    });
   });
 });
 
-describe.only("POST /api/users", () => {
-  test("POST:201 creates a new user", () => {
+describe("routing errors", () => {
+  test("GET 404: responds with appropriate error message", () => {
     return request(app)
-      .post("/api/users")
-      .send({
-        username: "user_test",
-        email: "test@test.com",
-        password: "password123",
-      })
-      .expect(201)
-      .then((res) => {
-        console.log(res.body.user)
-        expect(res.body.user).toHaveProperty("user_id");
-        expect(res.body.user.username).toBe("user_test");
-        expect(res.body.user.email).toBe("test@test.com");
+      .get("/api/not-a-route")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Path not found");
       });
   });
+});
+
+describe("/users", () => {
+  describe("POST requests", () => {
+    test("POST 201: creates a new user and responds with the created user", () => {
+      return request(app)
+        .post("/api/users")
+        .send({
+          username: "testuser",
+          email: "testuser@example.com",
+          age: "26 - 39",
+          bio: "Test user bio",
+          region: "Test Region",
+          city: "Test City",
+          type_of_biking: "Road",
+          difficulty: "Intermediate",
+          distance: "Test Distance",
+          avatar_url: "https://example.com/avatar.jpg"
+        })
+        .expect(201)
+        .then(({ body: { user } }) => {
+          expect(user).toMatchObject({
+            username: "testuser",
+            email: "testuser@example.com",
+            age: "26 - 39",
+            bio: "Test user bio",
+            region: "Test Region",
+            city: "Test City",
+            type_of_biking: "Road",
+            difficulty: "Intermediate",
+            distance: "Test Distance",
+            rating: 0,
+            avatar_url: "https://example.com/avatar.jpg"
+          });
+        });   
+    });
+    test("POST 400: will error when inputting more than 18 character for username", () => {
+      return request(app)
+        .post("/api/users")
+        .send({
+          username: "testuserlongcharacterstoomany",
+          email: "testuser@example.com",
+          age: "26 - 39",
+          bio: "Test user bio",
+          region: "Test Region",
+          city: "Test City",
+          type_of_biking: "Road",
+          difficulty: "Intermediate",
+          distance: "Test Distance",
+          avatar_url: "https://example.com/avatar.jpg"
+        })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Username must be 18 characters or less");
+      })
+    })
+  })
 });
