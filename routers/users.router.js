@@ -5,7 +5,6 @@ const {
   postRequestByUserId,
   createUser,
   patchUserRating,
-  deleteRequestByUseID,
 } = require("../controllers/users.controllers");
 
 const usersRouter = require("express").Router();
