@@ -153,6 +153,19 @@ describe("seed", () => {
           expect(column.column_name).toBe("rating");
         });
     });
+    test("users table has rating_count column", () => {
+      return db
+        .query(
+          `SELECT column_name, data_type, column_default
+                            FROM information_schema.columns
+                            WHERE table_name = 'users'
+                            AND column_name = 'rating_count';`
+        )
+        .then(({ rows: [column] }) => {
+          expect(column.column_name).toBe("rating_count");
+          expect(column.column_default).toBe('0');
+        });
+    });
     test("users table has avatar_url column", () => {
       return db
         .query(

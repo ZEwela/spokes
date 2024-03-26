@@ -78,6 +78,22 @@ exports.selectRequestsByUserId = (user_id, status='pending', order='desc', type=
 }
 
 
+exports.updateUserRating = (updatedRating, user_id) => {
+    return db.query(
+        `UPDATE users
+        SET
+        rating = $1,
+        rating_count = rating_count + 1
+        WHERE user_id = $2
+        RETURNING *;`,
+        [updatedRating, user_id]
+    )
+    .then(({rows}) => {
+        return rows[0];
+    })
+}
+
+
 exports.insertUser = (user) => {
     const { username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, avatar_url } = user;
 
