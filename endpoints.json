@@ -9,7 +9,7 @@
   "/api/users": {
     "GET /api/users": {
       "description": "serves up all users",
-      "queries": [],
+      "queries": ["location"],
       "exampleResponse": {
         "users": [
           {
@@ -51,6 +51,105 @@
             "avatar_url": "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         }
       }
+    },
+    "POST /api/users/:user_id": {
+      "description": "serves a new user",
+      "queries": [],
+      "body": {
+        "username": "jonnyDough92",
+        "email": "yampreek@gmail.com",
+        "age": "30",
+        "bio": "Passionate cyclist who loves exploring new trails.",
+        "region": "North West",
+        "city": "Manchester",
+        "type_of_biking": "Mountain",
+        "difficulty": "Intermediate",
+        "distance": "1",
+        "avatar_url": "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      },
+      "exampleResponse": {
+        "user": 
+          {
+            "user_id": 1,
+            "username": "jonnyDough92",
+            "email": "yampreek@gmail.com",
+            "age": "30",
+            "bio": "Passionate cyclist who loves exploring new trails.",
+            "region": "North West",
+            "city": "Manchester",
+            "type_of_biking": "Mountain",
+            "difficulty": "Intermediate",
+            "distance": "1",
+            "rating": 4,
+            "avatar_url": "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        }
+      }
+    },
+    "PATCH /api/users/:user_id": {
+      "description": "updates the user",
+      "queries": [],
+      "body": {
+        "username": "jonnyDough92",
+        "email": "yampreek@gmail.com",
+        "age": "18 - 25",
+        "bio": "New bio.",
+        "region": "North West",
+        "city": "Manchester",
+        "type_of_biking": "Mountain",
+        "difficulty": "Intermediate",
+        "distance": "75 km and above",
+        "avatar_url": "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      },
+      "exampleResponse": {
+        "user": 
+          {
+            "user_id": 1,
+            "username": "jonnyDough92",
+            "email": "yampreek@gmail.com",
+            "age": "18 - 25",
+            "bio": "New bio.",
+            "region": "North West",
+            "city": "Manchester",
+            "type_of_biking": "Mountain",
+            "difficulty": "Intermediate",
+            "distance": "75 km and above",
+            "rating": 3,
+            "rating_count": 2,
+            "avatar_url": "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        }
+      }
+    },
+    "DELETE /api/users/:user_id": {
+      "description": "deletes the user",
+      "queries": [],
+      "exampleResponse": {} 
+    }
+  },
+  "/users/:user_id/rating": {
+    "PATCH /users/:user_id/rating": {
+      "description": "updates user's rating",
+      "queries": [],
+      "body": {
+        "new_rating": 3
+      },
+      "exampleResponse": {
+        "user": 
+          {
+            "user_id": 1,
+            "username": "jonnyDough92",
+            "email": "yampreek@gmail.com",
+            "age": "30",
+            "bio": "Passionate cyclist who loves exploring new trails.",
+            "region": "North West",
+            "city": "Manchester",
+            "type_of_biking": "Mountain",
+            "difficulty": "Intermediate",
+            "distance": "1",
+            "rating": 3,
+            "rating_count": 1,
+            "avatar_url": "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          } 
+      } 
     }
   },
   "/api/users/:user_id/requests": {
@@ -117,6 +216,11 @@
             "status": "accepted"
           } 
       } 
+    },
+    "DELETE /api/requests/:request_id": {
+      "description": "deletes request",
+      "queries": [],
+      "exampleResponse": {} 
     }
   }
 }
