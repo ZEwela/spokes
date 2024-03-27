@@ -1,7 +1,8 @@
 const { selectUsers, selectSingleUser, selectRequestsByUserId, insertRequest, insertUser, updateUserRating ,updateUser, deleteUserById} = require("../models/users.models")
 
 exports.getUsers = (req, res, next) => {
-  selectUsers().then((users) => {
+  const {location} = req.query
+  selectUsers(location).then((users) => {
     res.status(200).send({ users });
   });
 };

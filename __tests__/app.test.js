@@ -144,6 +144,18 @@ describe("/users", () => {
           });
       });
     });
+    describe('location query', () => {
+      test('GET 200: responds with an array of users matching the given location', () => {
+        return request(app)
+        .get("/api/users?location=manchester")
+        .expect(200)
+        .then(({body: {users}}) => {
+          users.forEach((user) => {
+            expect(user.location).toBe('Manchester');
+          })
+        })
+      });
+    });
   });
   describe("POST requests", () => {
     test("POST 201: creates a new user and responds with the created user", () => {
