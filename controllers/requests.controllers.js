@@ -2,7 +2,6 @@ const { removeRequestByRequestID, updateRequestByRequestId } = require("../model
 
 exports.deleteRequestByRequestID = (req, res, next) => {
     const {request_id} = req.params
-    console.log('controller');
     removeRequestByRequestID(request_id)
     .then(() => {
         res.status(204).send()
