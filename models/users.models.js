@@ -30,30 +30,30 @@ exports.selectSingleUser = (user_id) => {
     });
 };
 
-exports.selectRequestsByUserId = (
-  user_id,
-  status = "pending",
-  order = "desc",
-  type = "all"
-) => {
-  const statusLookUp = ["accepted", "rejected", "pending"];
-  const orderLookUp = ["asc", "desc"];
-  const typeLookUp = ["all", "received", "sent"];
+// exports.selectRequestsByUserId = (
+//   user_id,
+//   status = "pending",
+//   order = "desc",
+//   type = "all"
+// ) => {
+//   const statusLookUp = ["accepted", "rejected", "pending"];
+//   const orderLookUp = ["asc", "desc"];
+//   const typeLookUp = ["all", "received", "sent"];
 
-  const queryValues = [user_id];
+//   const queryValues = [user_id];
 
-  if (
-    !typeLookUp.includes(type) ||
-    !statusLookUp.includes(status) ||
-    !orderLookUp.includes(order)
-  ) {
-    return Promise.reject({
-      status: 404,
-      msg: "User Not Found!",
-    });
-  }
-  return user;
-};
+//   if (
+//     !typeLookUp.includes(type) ||
+//     !statusLookUp.includes(status) ||
+//     !orderLookUp.includes(order)
+//   ) {
+//     return Promise.reject({
+//       status: 404,
+//       msg: "User Not Found!",
+//     });
+//   }
+//   return user;
+// };
 
 exports.selectRequestsByUserId = (
   user_id,
