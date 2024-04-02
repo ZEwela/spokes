@@ -89,7 +89,7 @@ describe("/api/users", () => {
           expect(users).toHaveLength(6);
           users.forEach((user) => {
             expect(user).toMatchObject({
-              user_id: expect.any(Number),
+              user_id: expect.any(String),
               username: expect.any(String),
               email: expect.any(String),
               age: expect.any(String),
@@ -105,16 +105,16 @@ describe("/api/users", () => {
           });
         });
     });
-    describe('location query', () => {
-      test('GET 200: responds with an array of users matching the given location', () => {
+    describe("location query", () => {
+      test("GET 200: responds with an array of users matching the given location", () => {
         return request(app)
-        .get("/api/users?location=manchester")
-        .expect(200)
-        .then(({body: {users}}) => {
-          users.forEach((user) => {
-            expect(user.city).toBe('manchester');
-          })
-        })
+          .get("/api/users?location=manchester")
+          .expect(200)
+          .then(({ body: { users } }) => {
+            users.forEach((user) => {
+              expect(user.city).toBe("manchester");
+            });
+          });
       });
     });
   });
@@ -128,7 +128,7 @@ describe("/api/users/:user_id", () => {
         .expect(200)
         .then(({ body: { user } }) => {
           expect(user).toMatchObject({
-            user_id: expect.any(Number),
+            user_id: expect.any(String),
             username: expect.any(String),
             email: expect.any(String),
             age: expect.any(String),
@@ -143,14 +143,6 @@ describe("/api/users/:user_id", () => {
           });
         });
     });
-    test("GET 400: responds with appropriate error message when given an invalid path", () => {
-      return request(app)
-        .get("/api/users/invalidid")
-        .expect(400)
-        .then(({ body: { msg } }) => {
-          expect(msg).toBe("Bad Request");
-        });
-    });
     test("GET 404: responds with appropriate error message when passed a valid but non existent id", () => {
       return request(app)
         .get("/api/users/0")
@@ -159,12 +151,13 @@ describe("/api/users/:user_id", () => {
           expect(msg).toBe("User Not Found!");
         });
     });
-  })
+  });
   describe("POST /api/users/:user_id", () => {
     test("POST 201: creates a new user and responds with the created user", () => {
       return request(app)
         .post("/api/users")
         .send({
+          user_id: 25,
           username: "testuser",
           email: "testuser@example.com",
           age: "26 - 39",
@@ -213,8 +206,8 @@ describe("/api/users/:user_id", () => {
           expect(msg).toBe("Username must be 18 characters or less");
         });
     });
-  })
-})
+  });
+});
 
 describe("/api/users/:user_id/requests", () => {
   describe("GET /api/users/:user_id/requests", () => {
@@ -228,15 +221,15 @@ describe("/api/users/:user_id/requests", () => {
           expect(requests).toBeSortedBy("created_at", { descending: true });
         });
     }),
-    test("GET 200: responds with an empty array when user do not have any pending requests", () => {
-      const user_id = 6;
-      return request(app)
-        .get(`/api/users/${user_id}/requests`)
-        .expect(200)
-        .then(({ body: { requests } }) => {
-          expect(requests).toEqual([]);
-        });
-    });
+      test("GET 200: responds with an empty array when user do not have any pending requests", () => {
+        const user_id = 6;
+        return request(app)
+          .get(`/api/users/${user_id}/requests`)
+          .expect(200)
+          .then(({ body: { requests } }) => {
+            expect(requests).toEqual([]);
+          });
+      });
     test("GET 200: responds with an array of objects sorted by created_at and ordered by provided order query", () => {
       const user_id = 1;
       // order: asc, desc
@@ -262,7 +255,7 @@ describe("/api/users/:user_id/requests", () => {
         });
     });
     test("GET 200: responds with an array of objects filtered by type of request", () => {
-      const user_id = 1;
+      const user_id = "1";
       // type: received, sent, all
       const type = "received";
       // expectIdType: receiver_id, sender_id
@@ -286,25 +279,16 @@ describe("/api/users/:user_id/requests", () => {
             expect(msg).toBe("User Not Found!");
           });
       }),
-      test("GET 400: responds with appropriate error message when given an invalid user id", () => {
-        const user_id = "invalid_id";
-        return request(app)
-          .get(`/api/users/${user_id}/requests`)
-          .expect(400)
-          .then(({ body: { msg } }) => {
-            expect(msg).toBe("Bad Request");
-          });
-      }),
-      test("GET 400: responds with appropriate error message when given an invalid status", () => {
-        const user_id = 1;
-        const status = "invalid_id";
-        return request(app)
-          .get(`/api/users/${user_id}/requests?status=${status}`)
-          .expect(400)
-          .then(({ body: { msg } }) => {
-            expect(msg).toBe("Bad Request");
-          });
-      });
+        test("GET 400: responds with appropriate error message when given an invalid status", () => {
+          const user_id = 1;
+          const status = "invalid_id";
+          return request(app)
+            .get(`/api/users/${user_id}/requests?status=${status}`)
+            .expect(400)
+            .then(({ body: { msg } }) => {
+              expect(msg).toBe("Bad Request");
+            });
+        });
       test("GET 400: responds with appropriate error message when given an invalid type", () => {
         const user_id = 1;
         const type = "invalid_id";
@@ -342,8 +326,8 @@ describe("/api/users/:user_id/requests", () => {
         .then(({ body: { request } }) => {
           expect(request).toMatchObject({
             request_id: expect.any(Number),
-            sender_id: expect.any(Number),
-            receiver_id: expect.any(Number),
+            sender_id: expect.any(String),
+            receiver_id: expect.any(String),
             created_at: expect.any(String),
             status: "pending",
           });
@@ -458,14 +442,6 @@ describe("/api/users/:user_id", () => {
           expect(msg).toBe("User Not Found!");
         });
     });
-    test("DELETE 400: responds with appropriate error message when given an invalid user ID", () => {
-      return request(app)
-        .delete("/api/users/invalid_id")
-        .expect(400)
-        .then(({ body: { msg } }) => {
-          expect(msg).toBe("Bad Request");
-        });
-    });
   });
   describe("PATCH /api/users/:user_id", () => {
     test("200: successfully updates the user and responds with the updated user data", async () => {
@@ -482,8 +458,10 @@ describe("/api/users/:user_id", () => {
         avatar_url:
           "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       };
-  
-      const response = await request(app).patch("/api/users/1").send(updateData);
+
+      const response = await request(app)
+        .patch("/api/users/1")
+        .send(updateData);
       expect(response.statusCode).toBe(200);
       expect(response.body.user).toMatchObject(updateData);
     });
@@ -502,7 +480,7 @@ describe("/api/users/:user_id", () => {
         avatar_url:
           "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       };
-  
+
       const response = await request(app)
         .patch(`/api/users/${UserId}`)
         .send(updateData);
@@ -510,9 +488,8 @@ describe("/api/users/:user_id", () => {
       expect(response.body.msg).toBe("User Not Found!");
     });
     test("400: returns an error when given invalid data (missing data)", async () => {
-      const UserId = "a";
+      const UserId = "1";
       const updateData = {
-        username: "jonnyDough92",
         email: "yampreek@gmail.com",
         age: "18 - 25",
         bio: "New Updated.",
@@ -522,12 +499,12 @@ describe("/api/users/:user_id", () => {
         difficulty: "Expert",
         distance: "75 km and above",
       };
-  
+
       const response = await request(app)
         .patch(`/api/users/${UserId}`)
         .send(updateData);
       expect(response.statusCode).toBe(400);
-      expect(response.body.msg).toBe("Bad Request");
+      expect(response.body.msg).toBe("Bad Request: Missing required update data fields.");
     });
   });
 });
@@ -540,7 +517,7 @@ describe("/api/users/:user_id/rating", () => {
       .expect(200)
       .then(({ body: { user } }) => {
         expect(user).toMatchObject({
-          user_id: expect.any(Number),
+          user_id: expect.any(String),
           username: expect.any(String),
           email: expect.any(String),
           age: expect.any(String),
@@ -563,7 +540,7 @@ describe("/api/users/:user_id/rating", () => {
       .expect(200)
       .then(({ body: { user } }) => {
         expect(user).toMatchObject({
-          user_id: expect.any(Number),
+          user_id: expect.any(String),
           username: expect.any(String),
           email: expect.any(String),
           age: expect.any(String),
@@ -586,15 +563,6 @@ describe("/api/users/:user_id/rating", () => {
       .expect(404)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("User Not Found!");
-      });
-  });
-  test("PATCH 400: responds with correct status and error message when requesting invalid ID", () => {
-    return request(app)
-      .patch("/api/users/forklift/rating")
-      .send({ new_rating: 1 })
-      .expect(400)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad Request");
       });
   });
 });

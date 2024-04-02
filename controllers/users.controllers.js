@@ -73,6 +73,7 @@ exports.patchUserRating = (req, res, next) => {
 exports.createUser = (req, res, next) => {
     const location = req.body.city
     const newUser = {
+        user_id: req.body.user_id,
         username: req.body.username,
         email: req.body.email,
         age: req.body.age,

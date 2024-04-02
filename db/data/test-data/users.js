@@ -1,5 +1,6 @@
 module.exports = [
     {
+        user_id: 1,
         username: "jonnyDough92",
         email: "yampreek@gmail.com",
         age: "18 - 25",
@@ -14,6 +15,7 @@ module.exports = [
         avatar_url: "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
+        user_id: 2,
         username: "asmith96",
         email: "alice.smith@example.com",
         age: "26 - 39",
@@ -28,6 +30,7 @@ module.exports = [
         avatar_url: "https://images.unsplash.com/photo-1598550880863-4e8aa3d0edb4?q=80&w=1527&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
+        user_id: 3,
         username: "wilko987123",
         email: "emily.johnson@example.com",
         age: "18 - 25",
@@ -42,6 +45,7 @@ module.exports = [
         avatar_url: "https://images.unsplash.com/photo-1606914707708-5180546f153d?q=80&w=1376&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
+        user_id: 4,
         username: "mbrown88",
         email: "michael.brown@example.com",
         age: "40 - 59",
@@ -56,6 +60,7 @@ module.exports = [
         avatar_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
+        user_id: 5,
         username: "sophielee33",
         email: "sophia.lee@example.com",
         age: "26 - 39",
@@ -70,6 +75,7 @@ module.exports = [
         avatar_url: "https://images.unsplash.com/photo-1625897428517-7e2062829a26?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
+        user_id: 6,
         username: "dannyg420",
         email: "daniel.garcia@example.com",
         age: "60+",

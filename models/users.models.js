@@ -207,6 +207,7 @@ exports.updateUserRating = (updatedRating, user_id) => {
 
 exports.insertUser = (user) => {
   const {
+    user_id,
     username,
     email,
     age,
@@ -222,10 +223,11 @@ exports.insertUser = (user) => {
 
   return db
     .query(
-      `INSERT INTO users (username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, avatar_url)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      `INSERT INTO users (user_id, username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, avatar_url)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
          RETURNING *;`,
       [
+        user_id,
         username,
         email,
         age,

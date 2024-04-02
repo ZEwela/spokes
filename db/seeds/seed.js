@@ -31,7 +31,7 @@ return db.query("DROP TABLE IF EXISTS requests;")
 function createUsers() {
   return db.query(`
     CREATE TABLE users (
-      user_id SERIAL PRIMARY KEY,
+      user_id VARCHAR PRIMARY KEY,
       username VARCHAR NOT NULL,
       email VARCHAR NOT NULL,
       age VARCHAR NOT NULL,
@@ -51,7 +51,7 @@ function insertUsersData(usersToInsert) {
   const userInsertStr = format(
     `
     INSERT INTO users
-      (username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, rating_count, avatar_url)
+      (user_id, username, email, age, bio, region, city, type_of_biking, difficulty, distance, rating, rating_count, avatar_url)
       VALUES %L
       RETURNING *;`,
     putDataInArray(usersToInsert)
@@ -80,8 +80,8 @@ function insertFilters(filtersJSON) {
 function createRequests() {
   return db.query(`CREATE TABLE requests (
     request_id SERIAL PRIMARY KEY,
-    sender_id INT REFERENCES users(user_id) NOT NULL,
-    receiver_id INT REFERENCES users(user_id) NOT NULL,
+    sender_id VARCHAR REFERENCES users(user_id) NOT NULL,
+    receiver_id VARCHAR REFERENCES users(user_id) NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
     status VARCHAR DEFAULT 'pending'
     );`);
