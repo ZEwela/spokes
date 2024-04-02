@@ -60,13 +60,15 @@ exports.patchUserRating = (req, res, next) => {
     .then(({ rating, rating_count }) => {
       const updatedRating =
         (rating * rating_count + new_rating) / (rating_count + 1);
-     return  updateUserRating(updatedRating, user_id);
+      const roundedRating = updatedRating.toPrecision(2);
+     return updateUserRating(roundedRating, user_id);
     })
     .then((user) => {
       res.status(200).send({ user });
     })
-
-    .catch(next);
+    .catch((err) => {
+      next(err)
+    });
 };
 
 
@@ -81,7 +83,7 @@ exports.createUser = (req, res, next) => {
         type_of_biking: req.body.type_of_biking,
         difficulty: req.body.difficulty,
         distance: req.body.distance,
-        rating: req.body.rating || 0, 
+        rating: req.body.rating || '0', 
         avatar_url: req.body.avatar_url
     };
     if (newUser.username.length > 18) {

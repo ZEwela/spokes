@@ -41,7 +41,7 @@ function createUsers() {
       type_of_biking VARCHAR NOT NULL,
       difficulty VARCHAR NOT NULL,
       distance VARCHAR,
-      rating INT,
+      rating NUMERIC,
       rating_count INT DEFAULT 0,
       avatar_url VARCHAR NOT NULL
     );`);

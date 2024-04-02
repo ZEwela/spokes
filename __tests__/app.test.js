@@ -99,7 +99,7 @@ describe("/api/users", () => {
               type_of_biking: expect.any(String),
               difficulty: expect.any(String),
               distance: expect.any(String),
-              rating: expect.any(Number),
+              rating: expect.any(String),
               avatar_url: expect.any(String),
             });
           });
@@ -138,7 +138,7 @@ describe("/api/users/:user_id", () => {
             type_of_biking: expect.any(String),
             difficulty: expect.any(String),
             distance: expect.any(String),
-            rating: expect.any(Number),
+            rating: expect.any(String),
             avatar_url: expect.any(String),
           });
         });
@@ -188,7 +188,7 @@ describe("/api/users/:user_id", () => {
             type_of_biking: "Road",
             difficulty: "Intermediate",
             distance: "Test Distance",
-            rating: 0,
+            rating: '0',
             avatar_url: "https://example.com/avatar.jpg",
           });
         });
@@ -550,7 +550,7 @@ describe("/api/users/:user_id/rating", () => {
           type_of_biking: expect.any(String),
           difficulty: expect.any(String),
           distance: expect.any(String),
-          rating: 3,
+          rating: '3.0',
           rating_count: 1,
           avatar_url: expect.any(String),
         });
@@ -558,8 +558,8 @@ describe("/api/users/:user_id/rating", () => {
   });
   test("PATCH 200: responds with correctly updated user rating for a user with existing ratings", () => {
     return request(app)
-      .patch("/api/users/1/rating")
-      .send({ new_rating: 2 })
+      .patch("/api/users/3/rating")
+      .send({ new_rating: 1 })
       .expect(200)
       .then(({ body: { user } }) => {
         expect(user).toMatchObject({
@@ -573,8 +573,8 @@ describe("/api/users/:user_id/rating", () => {
           type_of_biking: expect.any(String),
           difficulty: expect.any(String),
           distance: expect.any(String),
-          rating: 3,
-          rating_count: 2,
+          rating: '2.8',
+          rating_count: 13,
           avatar_url: expect.any(String),
         });
       });

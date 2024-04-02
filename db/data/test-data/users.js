@@ -9,7 +9,7 @@ module.exports = [
         type_of_biking: "Mountain",
         difficulty: "Expert",
         distance: "75 km and above",
-        rating: 4,
+        rating: '4',
         rating_count: 1,
         avatar_url: "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
@@ -23,7 +23,7 @@ module.exports = [
         type_of_biking: "Road",
         difficulty: "Advanced",
         distance: "25 km - 50 km",
-        rating: 0,
+        rating: '0',
         rating_count: 0,
         avatar_url: "https://images.unsplash.com/photo-1598550880863-4e8aa3d0edb4?q=80&w=1527&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
@@ -37,8 +37,8 @@ module.exports = [
         type_of_biking: "Park",
         difficulty: "Beginner",
         distance: "50 km - 75 km",
-        rating: 3,
-        rating_count: 2,
+        rating: '3',
+        rating_count: 12,
         avatar_url: "https://images.unsplash.com/photo-1606914707708-5180546f153d?q=80&w=1376&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
@@ -51,7 +51,7 @@ module.exports = [
         type_of_biking: "Mountain",
         difficulty: "Advanced",
         distance: "50 km - 75 km",
-        rating: 4,
+        rating: '4',
         rating_count: 1,
         avatar_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
@@ -65,7 +65,7 @@ module.exports = [
         type_of_biking: "Road",
         difficulty: "Intermediate",
         distance: "25 km - 50 km",
-        rating: 4,
+        rating:'4',
         rating_count: 1,
         avatar_url: "https://images.unsplash.com/photo-1625897428517-7e2062829a26?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
@@ -79,7 +79,7 @@ module.exports = [
         type_of_biking: "Park",
         difficulty: "Beginner",
         distance: "less than 25 km",
-        rating: 5,
+        rating: '5',
         rating_count: 3,
         avatar_url: "https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     }
