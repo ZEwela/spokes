@@ -112,7 +112,7 @@ describe("/api/users", () => {
         .expect(200)
         .then(({body: {users}}) => {
           users.forEach((user) => {
-            expect(user.location).toBe('Manchester');
+            expect(user.city).toBe('manchester');
           })
         })
       });

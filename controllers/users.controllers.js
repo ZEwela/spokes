@@ -71,13 +71,14 @@ exports.patchUserRating = (req, res, next) => {
 
 
 exports.createUser = (req, res, next) => {
+    const location = req.body.city
     const newUser = {
         username: req.body.username,
         email: req.body.email,
         age: req.body.age,
         bio: req.body.bio,
         region: req.body.region,
-        city: req.body.city,
+        city: location.toLowerCase(),
         type_of_biking: req.body.type_of_biking,
         difficulty: req.body.difficulty,
         distance: req.body.distance,
