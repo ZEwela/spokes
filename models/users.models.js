@@ -231,7 +231,7 @@ exports.insertUser = (user) => {
         age,
         bio,
         region,
-        city,
+        city.toLowerCase(),
         type_of_biking,
         difficulty,
         distance,

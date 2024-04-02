@@ -184,7 +184,7 @@ describe("/api/users/:user_id", () => {
             age: "26 - 39",
             bio: "Test user bio",
             region: "Test Region",
-            city: "Test City",
+            city: "test city",
             type_of_biking: "Road",
             difficulty: "Intermediate",
             distance: "Test Distance",
