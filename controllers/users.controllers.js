@@ -61,6 +61,7 @@ exports.updateUserById = async (req, res, next) => {
 };
 
 exports.patchUserRating = (req, res, next) => {
+  console.log("hello from controller")
   const { user_id } = req.params;
   const {
     body: { new_rating },
