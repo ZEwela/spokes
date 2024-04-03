@@ -165,6 +165,7 @@ exports.updateUser = async (userId, updateData) => {
 };
 
 exports.updateUserRating = (updatedRating, user_id) => {
+  console.log(updatedRating, user_id)
   return db
     .query(
       `UPDATE users
