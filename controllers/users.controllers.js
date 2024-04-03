@@ -1,7 +1,17 @@
-const { selectUsers, selectSingleUser, selectRequestsByUserId, insertRequest, insertUser, updateUserRating ,updateUser, deleteUserById} = require("../models/users.models")
+const {
+  selectUsers,
+  selectSingleUser,
+  selectRequestsByUserId,
+  insertRequest,
+  insertUser,
+  updateUserRating,
+  updateUser,
+  deleteUserById,
+  selectAllUsersForLoggedInUser,
+} = require("../models/users.models");
 
 exports.getUsers = (req, res, next) => {
-  const {location} = req.query
+  const { location } = req.query;
   selectUsers(location).then((users) => {
     res.status(200).send({ users });
   });
@@ -35,7 +45,6 @@ exports.getRequestsByUserId = (req, res, next) => {
     });
 };
 
-
 exports.updateUserById = async (req, res, next) => {
   const { user_id } = req.params;
   const updateData = req.body;
@@ -61,64 +70,81 @@ exports.patchUserRating = (req, res, next) => {
       const updatedRating =
         (rating * rating_count + new_rating) / (rating_count + 1);
       const roundedRating = updatedRating.toPrecision(2);
-     return updateUserRating(roundedRating, user_id);
+      return updateUserRating(roundedRating, user_id);
     })
     .then((user) => {
       res.status(200).send({ user });
     })
     .catch((err) => {
-      next(err)
+      next(err);
     });
 };
 
-
 exports.createUser = (req, res, next) => {
-    const location = req.body.city
-    const newUser = {
-        user_id: req.body.user_id,
-        username: req.body.username,
-        email: req.body.email,
-        age: req.body.age,
-        bio: req.body.bio,
-        region: req.body.region,
-        city: location.toLowerCase(),
-        type_of_biking: req.body.type_of_biking,
-        difficulty: req.body.difficulty,
-        distance: req.body.distance,
-        rating: req.body.rating || '0', 
-        avatar_url: req.body.avatar_url
-    };
-    if (newUser.username.length > 18) {
-        return res.status(400).json({ msg: "Username must be 18 characters or less" })
-    }
-    insertUser(newUser)
-    .then(user => {
-        res.status(201).json({ user });
+  const location = req.body.city;
+  const newUser = {
+    user_id: req.body.user_id,
+    username: req.body.username,
+    email: req.body.email,
+    age: req.body.age,
+    bio: req.body.bio,
+    region: req.body.region,
+    city: location.toLowerCase(),
+    type_of_biking: req.body.type_of_biking,
+    difficulty: req.body.difficulty,
+    distance: req.body.distance,
+    rating: req.body.rating || "0",
+    avatar_url: req.body.avatar_url,
+  };
+  if (newUser.username.length > 18) {
+    return res
+      .status(400)
+      .json({ msg: "Username must be 18 characters or less" });
+  }
+  insertUser(newUser)
+    .then((user) => {
+      res.status(201).json({ user });
     })
     .catch(next);
 };
 
 exports.postRequestByUserId = (req, res, next) => {
-    const body = req.body;
+  const body = req.body;
 
-    const promises = [selectSingleUser(body.receiver_id), insertRequest(body)]
-    
-    Promise.all(promises)
+  const promises = [selectSingleUser(body.receiver_id), insertRequest(body)];
+
+  Promise.all(promises)
     .then((promisesResolution) => {
       res.status(201).send({ request: promisesResolution[1] });
     })
     .catch((err) => {
       next(err);
     });
-}
+};
 
 exports.deleteUser = (req, res, next) => {
-    const { user_id } = req.params;
-    deleteUserById(user_id)
-      .then(() => {
-        res.status(204).end();
-      })
-      .catch((err) => {
-        next(err);
-      });
+  const { user_id } = req.params;
+  deleteUserById(user_id)
+    .then(() => {
+      res.status(204).end();
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getAllUsersForLoggedInUser = (req, res, next) => {
+  const { user_id } = req.params;
+  const { location } = req.query;
+  const promises = [
+    selectSingleUser(user_id),
+    selectAllUsersForLoggedInUser(user_id, location),
+  ];
+  Promise.all(promises)
+    .then((resolvePromises) => {
+      res.status(200).send({ users: resolvePromises[1] });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };

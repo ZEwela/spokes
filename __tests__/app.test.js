@@ -120,6 +120,75 @@ describe("/api/users", () => {
   });
 });
 
+describe.only("GET /api/users/:user_id/recommendation", () => {
+  test("GET 200: responds with an array of users that not includes user_id", () => {
+    const user_id = 6;
+    return request(app)
+      .get(`/api/users/${user_id}/recommendation`)
+      .expect(200)
+      .then(({ body: { users } }) => {
+        users.forEach((user) => {
+          expect(user.user_id).not.toBe(user_id);
+        });
+      });
+  });
+  test("GET 200: responds with an array of users that includes users that do not have any requests connected to user_id", () => {
+    const user_id = 1;
+    const expectedOutput = [
+      {
+        user_id: "6",
+        username: "dannyg420",
+        email: "daniel.garcia@example.com",
+        age: "60+",
+        bio: "Relaxed cyclist who enjoys scenic routes in parks.",
+        region: "South West",
+        city: "bristol",
+        type_of_biking: "Park",
+        difficulty: "Beginner",
+        distance: "less than 25 km",
+        rating: "5",
+        rating_count: 3,
+        avatar_url:
+          "https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      },
+    ];
+    return request(app)
+      .get(`/api/users/${user_id}/recommendation`)
+      .expect(200)
+      .then(({ body: { users } }) => {
+        expect(users).toEqual(expectedOutput);
+      });
+  });
+  test("GET 200: responds with an array of users matching the given location", () => {
+    const user_id = 6;
+    return request(app)
+      .get(`/api/users/${user_id}/recommendation?location=manchester`)
+      .expect(200)
+      .then(({ body: { users } }) => {
+        users.forEach((user) => {
+          expect(user.city).toBe("manchester");
+        });
+      });
+  });
+  test("GET 200: responds with an empty array when there are not users matching the given location", () => {
+    const user_id = 1;
+    return request(app)
+      .get(`/api/users/${user_id}/recommendation?location=manchester`)
+      .expect(200)
+      .then(({ body: { users } }) => {
+        expect(users).toEqual([]);
+      });
+  });
+  test("GET 404: responds with appropriate error message when passed a valid but non existent id", () => {
+    return request(app)
+      .get("/api/users/0/recommendation")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("User Not Found!");
+      });
+  });
+});
+
 describe("/api/users/:user_id", () => {
   describe("GET /api/users/:user_id", () => {
     test("GET 200: responds with a single user", () => {
@@ -181,7 +250,7 @@ describe("/api/users/:user_id", () => {
             type_of_biking: "Road",
             difficulty: "Intermediate",
             distance: "Test Distance",
-            rating: '0',
+            rating: "0",
             avatar_url: "https://example.com/avatar.jpg",
           });
         });
@@ -504,7 +573,9 @@ describe("/api/users/:user_id", () => {
         .patch(`/api/users/${UserId}`)
         .send(updateData);
       expect(response.statusCode).toBe(400);
-      expect(response.body.msg).toBe("Bad Request: Missing required update data fields.");
+      expect(response.body.msg).toBe(
+        "Bad Request: Missing required update data fields."
+      );
     });
   });
 });
@@ -527,7 +598,7 @@ describe("/api/users/:user_id/rating", () => {
           type_of_biking: expect.any(String),
           difficulty: expect.any(String),
           distance: expect.any(String),
-          rating: '3.0',
+          rating: "3.0",
           rating_count: 1,
           avatar_url: expect.any(String),
         });
@@ -550,7 +621,7 @@ describe("/api/users/:user_id/rating", () => {
           type_of_biking: expect.any(String),
           difficulty: expect.any(String),
           distance: expect.any(String),
-          rating: '2.8',
+          rating: "2.8",
           rating_count: 13,
           avatar_url: expect.any(String),
         });

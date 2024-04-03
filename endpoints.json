@@ -30,12 +30,12 @@
       }
     }
   },
-  "/api/users/:user_id": {
-    "GET /api/users/:user_id": {
-      "description": "serves an object of a single user",
-      "queries": [],
+  "/api/users/:user_id/recommendation": {
+    "GET /api/users/:user_id/recommendation": {
+      "description": "selects users who do not have any requests connected with the logged-in user",
+      "queries": ["location"],
       "exampleResponse": {
-        "user": 
+        "users": [
           {
             "user_id": 1,
             "username": "jonnyDough92",
@@ -49,6 +49,29 @@
             "distance": "1",
             "rating": 4,
             "avatar_url": "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          }
+        ]
+      }
+    }
+  },
+  "/api/users/:user_id": {
+    "GET /api/users/:user_id": {
+      "description": "serves an object of a single user",
+      "queries": [],
+      "exampleResponse": {
+        "user": {
+          "user_id": 1,
+          "username": "jonnyDough92",
+          "email": "yampreek@gmail.com",
+          "age": "30",
+          "bio": "Passionate cyclist who loves exploring new trails.",
+          "region": "North West",
+          "city": "Manchester",
+          "type_of_biking": "Mountain",
+          "difficulty": "Intermediate",
+          "distance": "1",
+          "rating": 4,
+          "avatar_url": "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         }
       }
     },
@@ -69,20 +92,19 @@
         "avatar_url": "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
       },
       "exampleResponse": {
-        "user": 
-          {
-            "user_id": "UlQKGYUtRqRWyXiiTAGUTR9gRpD3",
-            "username": "jonnyDough92",
-            "email": "yampreek@gmail.com",
-            "age": "30",
-            "bio": "Passionate cyclist who loves exploring new trails.",
-            "region": "North West",
-            "city": "Manchester",
-            "type_of_biking": "Mountain",
-            "difficulty": "Intermediate",
-            "distance": "1",
-            "rating": 4,
-            "avatar_url": "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "user": {
+          "user_id": "UlQKGYUtRqRWyXiiTAGUTR9gRpD3",
+          "username": "jonnyDough92",
+          "email": "yampreek@gmail.com",
+          "age": "30",
+          "bio": "Passionate cyclist who loves exploring new trails.",
+          "region": "North West",
+          "city": "Manchester",
+          "type_of_biking": "Mountain",
+          "difficulty": "Intermediate",
+          "distance": "1",
+          "rating": 4,
+          "avatar_url": "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         }
       }
     },
@@ -102,28 +124,27 @@
         "avatar_url": "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
       },
       "exampleResponse": {
-        "user": 
-          {
-            "user_id": 1,
-            "username": "jonnyDough92",
-            "email": "yampreek@gmail.com",
-            "age": "18 - 25",
-            "bio": "New bio.",
-            "region": "North West",
-            "city": "Manchester",
-            "type_of_biking": "Mountain",
-            "difficulty": "Intermediate",
-            "distance": "75 km and above",
-            "rating": 3,
-            "rating_count": 2,
-            "avatar_url": "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "user": {
+          "user_id": 1,
+          "username": "jonnyDough92",
+          "email": "yampreek@gmail.com",
+          "age": "18 - 25",
+          "bio": "New bio.",
+          "region": "North West",
+          "city": "Manchester",
+          "type_of_biking": "Mountain",
+          "difficulty": "Intermediate",
+          "distance": "75 km and above",
+          "rating": 3,
+          "rating_count": 2,
+          "avatar_url": "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         }
       }
     },
     "DELETE /api/users/:user_id": {
       "description": "deletes the user",
       "queries": [],
-      "exampleResponse": {} 
+      "exampleResponse": {}
     }
   },
   "/users/:user_id/rating": {
@@ -134,23 +155,22 @@
         "new_rating": 3
       },
       "exampleResponse": {
-        "user": 
-          {
-            "user_id": 1,
-            "username": "jonnyDough92",
-            "email": "yampreek@gmail.com",
-            "age": "30",
-            "bio": "Passionate cyclist who loves exploring new trails.",
-            "region": "North West",
-            "city": "Manchester",
-            "type_of_biking": "Mountain",
-            "difficulty": "Intermediate",
-            "distance": "1",
-            "rating": 3,
-            "rating_count": 1,
-            "avatar_url": "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          } 
-      } 
+        "user": {
+          "user_id": 1,
+          "username": "jonnyDough92",
+          "email": "yampreek@gmail.com",
+          "age": "30",
+          "bio": "Passionate cyclist who loves exploring new trails.",
+          "region": "North West",
+          "city": "Manchester",
+          "type_of_biking": "Mountain",
+          "difficulty": "Intermediate",
+          "distance": "1",
+          "rating": 3,
+          "rating_count": 1,
+          "avatar_url": "https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        }
+      }
     }
   },
   "/api/users/:user_id/requests": {
@@ -177,9 +197,9 @@
             "receiver_id": 1,
             "created_at": "2020-02-23T12:01:00.000Z",
             "status": "pending"
-          } 
+          }
         ]
-      } 
+      }
     },
     "POST /users/:user_id/requests": {
       "description": "serves a new request",
@@ -189,15 +209,14 @@
         "receiver_id": 5
       },
       "exampleResponse": {
-        "request": 
-          {
-            "request_id": 4,
-            "sender_id": 2,
-            "receiver_id": 5,
-            "created_at": "2020-02-23T12:01:00.000Z",
-            "status": "pending"
-          } 
-      } 
+        "request": {
+          "request_id": 4,
+          "sender_id": 2,
+          "receiver_id": 5,
+          "created_at": "2020-02-23T12:01:00.000Z",
+          "status": "pending"
+        }
+      }
     }
   },
   "/api/requests/:request_id": {
@@ -208,20 +227,19 @@
         "status": "accepted"
       },
       "exampleResponse": {
-        "request": 
-          {
-            "request_id": 4,
-            "sender_id": 2,
-            "receiver_id": 5,
-            "created_at": "2020-02-23T12:01:00.000Z",
-            "status": "accepted"
-          } 
-      } 
+        "request": {
+          "request_id": 4,
+          "sender_id": 2,
+          "receiver_id": 5,
+          "created_at": "2020-02-23T12:01:00.000Z",
+          "status": "accepted"
+        }
+      }
     },
     "DELETE /api/requests/:request_id": {
       "description": "deletes request",
       "queries": [],
-      "exampleResponse": {} 
+      "exampleResponse": {}
     }
   }
 }
