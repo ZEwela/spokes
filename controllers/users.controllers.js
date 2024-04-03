@@ -46,6 +46,7 @@ exports.getRequestsByUserId = (req, res, next) => {
 };
 
 exports.updateUserById = async (req, res, next) => {
+  console.log("hello im the wrong one")
   const { user_id } = req.params;
   const updateData = req.body;
 
