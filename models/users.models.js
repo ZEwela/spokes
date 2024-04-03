@@ -250,3 +250,33 @@ exports.deleteUserById = (user_id) => {
       }
     });
 };
+
+exports.selectAllUsersForLoggedInUser = (user_id, location) => {
+  const queryValues = [user_id];
+  let queryString = `SELECT DISTINCT users.*
+    FROM users 
+    LEFT JOIN requests 
+    ON users.user_id = requests.sender_id OR users.user_id = requests.receiver_id
+    WHERE 
+        (requests.sender_id != $1 OR requests.sender_id IS NULL) 
+        AND (requests.receiver_id != $1 OR requests.receiver_id IS NULL)
+        AND users.user_id NOT IN (
+            SELECT DISTINCT users.user_id
+            FROM users 
+            LEFT JOIN requests 
+            ON users.user_id = requests.sender_id OR users.user_id = requests.receiver_id
+            WHERE requests.sender_id = $1 OR requests.receiver_id = $1
+        )
+        AND users.user_id != $1`;
+
+  if (location) {
+    queryValues.push(location);
+    queryString += ` AND users.city = $2`;
+  }
+
+  queryString += ";";
+
+  return db.query(queryString, queryValues).then(({ rows }) => {
+    return rows;
+  });
+};
